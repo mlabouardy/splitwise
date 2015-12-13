@@ -8,10 +8,6 @@
  * Controller of the publicApp
  */
 angular.module('publicApp')
-  .controller('MainCtrl', function () {
-    this.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+  .controller('MainCtrl', function() {
+    
   });

@@ -32,11 +32,10 @@
             </button>
             <a class="navbar-brand" href="#/"><img src="https://dx0qysuen8cbs.cloudfront.net/assets/fat_rabbit/wordmark-038b462ad6f1d67855d02cb81e7931af.png" width="40%"></a>
           </div>
-          <div id="navbar" class="navbar-collapse collapse">
-
+          <div id="navbar" class="navbar-collapse collapse" ng-controller="MenuCtrl">
             <ul class="nav navbar-nav navbar-right">
-              <li><a href="#/login">Login</a></li>
-              <li><a href="#/sign-up">Sign up</a></li>
+              <li data-ng-class="{active: isActive('/login')}"><a href="#/login">Login</a></li>
+              <li data-ng-class="{active: isActive('/sign-up')}"><a href="#/sign-up">Sign up</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div><!--/.container-fluid -->
@@ -62,6 +61,7 @@
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
+        <script src="scripts/controllers/menu.js"></script>
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/controllers/login.js"></script>
         <script src="scripts/controllers/sign-up.js"></script>
