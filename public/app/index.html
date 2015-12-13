@@ -12,6 +12,7 @@
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/style.css">
     <!-- endbuild -->
   </head>
   <body ng-app="publicApp">
@@ -20,8 +21,8 @@
     <![endif]-->
 
     <!-- Add your site or application content here -->
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
+    <nav class="navbar navbar-default navbar-custom">
+        <div class="container-fluid customer-container">
           <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
               <span class="sr-only">Toggle navigation</span>
@@ -29,7 +30,7 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#/">SPLITWISE</a>
+            <a class="navbar-brand" href="#/"><img src="https://dx0qysuen8cbs.cloudfront.net/assets/fat_rabbit/wordmark-038b462ad6f1d67855d02cb81e7931af.png" width="40%"></a>
           </div>
           <div id="navbar" class="navbar-collapse collapse">
 
@@ -41,9 +42,9 @@
         </div><!--/.container-fluid -->
       </nav>
 
+      <div ng-view=""></div>
 
-    <div ng-view=""></div>
-
+      <div ng-include src="'footer.html'"></div>
 
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
