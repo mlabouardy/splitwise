@@ -43,3 +43,18 @@
 html,body{
   height:100%;
 }
+
+.push{
+  height: 40px;
+}
+
+.custom-btn{
+  background-color:#FF5216;
+  border-color:#FF5216;
+}
+
+.custom-btn:active,
+.custom-btn:hover{
+  background-color:#EE7544;
+  border-color:#EE7544;
+}

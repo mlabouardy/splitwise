@@ -15,9 +15,10 @@ angular
     'ngResource',
     'ngRoute',
     'ngSanitize',
-    'ngTouch'
+    'ngTouch',
+    'googleplus'
   ])
-  .config(function ($routeProvider) {
+  .config(function ($routeProvider, GooglePlusProvider) {
     $routeProvider
       .when('/', {
         templateUrl: 'views/main.html',
@@ -34,5 +35,10 @@ angular
       })
       .otherwise({
         redirectTo: '/'
+      });
+
+      GooglePlusProvider.init({
+           clientId: '681024083865-sdgb14jp2bcb34et0s6qfaveu9fsbq0n.apps.googleusercontent.com',
+           apiKey: 'ZWQeuK1dPqgjhJ9GaZs9KI93'
       });
   });
