@@ -1,0 +1,28 @@
+{
+  "name": "splitwise",
+  "version": "1.0.0",
+  "description": "M2 Web project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mlabouardy/splitwise.git"
+  },
+  "keywords": [
+    "NodeJS",
+    "AngularJS",
+    "MongoDB",
+    "ExpressJS"
+  ],
+  "author": "Mohamed Labouardy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mlabouardy/splitwise/issues"
+  },
+  "homepage": "https://github.com/mlabouardy/splitwise#readme",
+  "dependencies": {
+    "express": "^4.13.3"
+  }
+}
