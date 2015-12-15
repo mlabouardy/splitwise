@@ -9,9 +9,5 @@
  */
 angular.module('publicApp')
   .controller('ProfileCtrl', function () {
-    this.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+    $(":file").filestyle({input: false,size: "sm", buttonText: "Choose picture"});
   });

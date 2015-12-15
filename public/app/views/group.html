@@ -1,0 +1,49 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					Groupe name
+					<div class="button-group pull-right">
+						<a class="btn btn-success custom-btn btn-xs">Add a bill</a>
+						<a class="btn btn-success custom-btn btn-xs">Settle up</a>
+					</div>
+				</div>
+				<div class="panel-body">
+					<table class="table table-bordered table-hover">
+						<thead>
+							<tr>
+								<th>Date</th>
+								<th>Description</th>
+								<th>Price</th>
+							</tr>
+						</thead>
+						<tbody>
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					Groupe Settings
+					<div class="button-group pull-right">
+					</div>
+				</div>
+				<div class="panel-body">
+						<uib-tabset justified="true">
+						    <uib-tab ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active" disable="tab.disabled">
+						      <div class="col-md-12">
+						      	{{tab.content}}
+						      </div>
+						    </uib-tab>
+						</uib-tabset>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

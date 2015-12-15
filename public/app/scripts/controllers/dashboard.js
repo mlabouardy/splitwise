@@ -8,10 +8,8 @@
  * Controller of the publicApp
  */
 angular.module('publicApp')
-  .controller('DashboardCtrl', function () {
-    this.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+  .controller('DashboardCtrl', function ($scope) {
+    	$scope.newGroup=function(){
+    		toastr.success('Group successfuly created!', 'Splitwise');
+    	}
   });

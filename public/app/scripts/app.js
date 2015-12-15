@@ -16,6 +16,7 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch',
+    'ui.bootstrap',
     'googleplus'
   ])
   .config(function ($routeProvider, GooglePlusProvider) {
@@ -26,8 +27,7 @@ angular
       })
       .when('/login', {
         templateUrl: 'views/login.html',
-        controller: 'LoginCtrl',
-        controllerAs: 'login'
+        controller: 'LoginCtrl'
       })
       .when('/sign-up', {
         templateUrl: 'views/sign-up.html',
@@ -35,23 +35,27 @@ angular
       })
       .when('/profile', {
         templateUrl: 'views/profile.html',
-        controller: 'ProfileCtrl',
-        controllerAs: 'profile'
+        controller: 'ProfileCtrl'
       })
       .when('/logout', {
         templateUrl: 'views/logout.html',
-        controller: 'LogoutCtrl',
-        controllerAs: 'logout'
+        controller: 'LogoutCtrl'
       })
       .when('/dashboard', {
         templateUrl: 'views/dashboard.html',
-        controller: 'DashboardCtrl',
-        controllerAs: 'dashboard'
+        controller: 'DashboardCtrl'
       })
       .when('/friend_invite', {
         templateUrl: 'views/friend_invite.html',
-        controller: 'FriendInviteCtrl',
-        controllerAs: 'friendInvite'
+        controller: 'FriendInviteCtrl'
+      })
+      .when('/groups', {
+        templateUrl: 'views/groups.html',
+        controller: 'GroupsCtrl'
+      })
+      .when('/group/:id', {
+        templateUrl: 'views/group.html',
+        controller: 'GroupDetailCtrl'
       })
       .otherwise({
         redirectTo: '/'
