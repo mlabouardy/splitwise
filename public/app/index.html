@@ -33,10 +33,18 @@
             <a class="navbar-brand" href="#/"><img src="https://dx0qysuen8cbs.cloudfront.net/assets/fat_rabbit/wordmark-038b462ad6f1d67855d02cb81e7931af.png" width="40%"></a>
           </div>
           <div id="navbar" class="navbar-collapse collapse" ng-controller="MenuCtrl">
-            <ul class="nav navbar-nav navbar-right">
-              <li data-ng-class="{active: isActive('/login')}"><a href="#/login">Login</a></li>
-              <li data-ng-class="{active: isActive('/sign-up')}"><a href="#/sign-up">Sign up</a></li>
-            </ul>
+            <div ng-if="!isConnected()">
+              <ul class="nav navbar-nav navbar-right">
+                <li data-ng-class="{active: isActive('/login')}"><a href="#/login">Login</a></li>
+                <li data-ng-class="{active: isActive('/sign-up')}"><a href="#/sign-up">Sign up</a></li>
+              </ul>
+            </div>
+             <div ng-if="isConnected()">
+              <ul class="nav navbar-nav navbar-right">
+                <li data-ng-class="{active: isActive('/profile')}"><a href="#/profile">Profile</a></li>
+                <li data-ng-class="{active: isActive('/logout')}"><a href="#/logout">Logout</a></li>
+              </ul>
+            </div>
           </div><!--/.nav-collapse -->
         </div><!--/.container-fluid -->
       </nav>
@@ -66,6 +74,9 @@
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/controllers/login.js"></script>
         <script src="scripts/controllers/sign-up.js"></script>
+        <script src="scripts/controllers/profile.js"></script>
+        <script src="scripts/services/authentication.js"></script>
+        <script src="scripts/controllers/logout.js"></script>
         <!-- endbuild -->
 </body>
 </html>

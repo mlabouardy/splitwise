@@ -8,6 +8,5 @@
  * Controller of the publicApp
  */
 angular.module('publicApp')
-  .controller('MainCtrl', function() {
-    
+  .controller('MainCtrl', function($scope) {
   });

@@ -8,6 +8,7 @@
  * Controller of the publicApp
  */
 angular.module('publicApp')
-  .controller('LoginCtrl', function () {
-    
+  .controller('LoginCtrl', function (Authentication, $location) {
+    Authentication.login();
+    $location.path('/');
   });

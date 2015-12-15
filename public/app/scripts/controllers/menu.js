@@ -1,8 +1,11 @@
 
 
 angular.module('publicApp')
-  .controller('MenuCtrl', function ($scope, $location) {
+  .controller('MenuCtrl', function ($scope, $location, Authentication) {
     $scope.isActive=function(path){
     	return $location.path()==path;
+    }
+    $scope.isConnected=function(){
+    	return Authentication.isConnected();
     }
   });
