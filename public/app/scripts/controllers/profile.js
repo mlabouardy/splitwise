@@ -9,5 +9,5 @@
  */
 angular.module('publicApp')
   .controller('ProfileCtrl', function () {
-    $(":file").filestyle({input: false,size: "sm", buttonText: "Choose picture"});
+    $(":file").filestyle({input: false,size: "sm", buttonText: "Choose picture",badge:false});
   });
