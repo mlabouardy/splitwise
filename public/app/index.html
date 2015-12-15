@@ -30,7 +30,7 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#/"><img src="https://dx0qysuen8cbs.cloudfront.net/assets/fat_rabbit/wordmark-038b462ad6f1d67855d02cb81e7931af.png" width="40%"></a>
+            <a class="navbar-brand" href="#/">SPLITWISE</a>
           </div>
           <div id="navbar" class="navbar-collapse collapse" ng-controller="MenuCtrl">
             <div ng-if="!isConnected()">
@@ -40,6 +40,9 @@
               </ul>
             </div>
              <div ng-if="isConnected()">
+              <ul class="nav navbar-nav">
+                <li data-ng-class="{active: isActive('/dashboard')}"><a href="#/dashboard">Dashboard</a></li>
+              </ul>
               <ul class="nav navbar-nav navbar-right">
                 <li data-ng-class="{active: isActive('/profile')}"><a href="#/profile">Profile</a></li>
                 <li data-ng-class="{active: isActive('/logout')}"><a href="#/logout">Logout</a></li>
@@ -77,6 +80,8 @@
         <script src="scripts/controllers/profile.js"></script>
         <script src="scripts/services/authentication.js"></script>
         <script src="scripts/controllers/logout.js"></script>
+        <script src="scripts/controllers/dashboard.js"></script>
+        <script src="scripts/controllers/friend_invite.js"></script>
         <!-- endbuild -->
 </body>
 </html>

@@ -43,6 +43,16 @@ angular
         controller: 'LogoutCtrl',
         controllerAs: 'logout'
       })
+      .when('/dashboard', {
+        templateUrl: 'views/dashboard.html',
+        controller: 'DashboardCtrl',
+        controllerAs: 'dashboard'
+      })
+      .when('/friend_invite', {
+        templateUrl: 'views/friend_invite.html',
+        controller: 'FriendInviteCtrl',
+        controllerAs: 'friendInvite'
+      })
       .otherwise({
         redirectTo: '/'
       });

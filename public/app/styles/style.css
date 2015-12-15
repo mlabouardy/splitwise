@@ -40,12 +40,8 @@
   margin-right:80px;
 }
 
-html,body{
-  height:100%;
-}
-
-.push{
-  height: 40px;
+body{
+  font-family: Futura,Trebuchet MS,Arial,sans-serif; 
 }
 
 .custom-btn{
@@ -57,4 +53,19 @@ html,body{
 .custom-btn:hover{
   background-color:#EE7544;
   border-color:#EE7544;
+}
+
+.center-div{
+  text-align: center;
+}
+
+.panel > .panel-heading {
+    background-image: none;
+    background-color: #5BC5A7;
+    color: white;
+    border-color:#5BC5A7;
+}
+
+.panel{
+  border-color:#5BC5A7;
 }
