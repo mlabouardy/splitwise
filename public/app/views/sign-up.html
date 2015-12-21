@@ -1,34 +1,55 @@
-<div class="container">
-	<div class="row">
-		<div class="col-md-6">
-			<img src="https://dx0qysuen8cbs.cloudfront.net/assets/fat_rabbit/logo-77d715b28f6e77582984a091b1588cea.png" width="150">
-		</div>
-		<div class="col-md-6">
-			<div class="row">
-				<div class="col-md-12">
-					<h3>INTRODUCE YOURSELF</h3>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-12">
-					<form>
-						<div class="form-group">
-							<label>Hi there! My name is</label>
-							<input type="text" class="form-control"/>
-						</div>
-					</form>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-12">
-					<div class="button-group">
-						<a class="btn btn-success custom-btn">Sign me up !</a>
-						or
-						<a ng-click="login()"> <img src="https://developers.google.com/+/images/branding/sign-in-buttons/Red-signin_Google_base_44dp.png" width="120"></a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="push"></div>
+<div style="margin-top:50px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+    <div class="panel panel-info">
+        
+        <div class="panel-heading">
+            Sign Up
+            <a href="#/login" class="btn btn-danger btn-xs pull-right custom-btn">Sign In</a>
+        </div>
+        <div class="panel-body" >
+        
+            <form class="form-horizontal" role="form">
+                
+                <div ng-show="errorMessages.length > 0" class="alert alert-danger">
+                    <p>Error:</p>
+                    <div ng-repeat="error in errorMessages">
+                        <span>{{error}}</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Email</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" ng-model="user.email">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-md-3 control-label">First Name</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" ng-model="user.firstName">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Last Name</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" ng-model="user.lastName">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Password</label>
+                    <div class="col-md-9">
+                        <input type="password" class="form-control" ng-model="user.password">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button type="button" class="btn btn-info custom-btn btn-block" ng-click="register()">Sign Up</button>
+                    </div>
+                </div>
+                
+            </form>
+        </div>
+    </div>
 </div>

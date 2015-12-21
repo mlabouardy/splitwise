@@ -8,6 +8,10 @@
  * Controller of the publicApp
  */
 angular.module('publicApp')
-  .controller('ProfileCtrl', function () {
-    $(":file").filestyle({input: false,size: "sm", buttonText: "Choose picture",badge:false});
+  .controller('ProfileCtrl', function (Authentication, $location) {
+  	if(Authentication.isConnected()){
+	   $(":file").filestyle({input: false,size: "sm", buttonText: "Choose picture",badge:false});
+	}else{
+	   $location.path('/');
+	}
   });

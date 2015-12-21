@@ -8,18 +8,26 @@
  * Service in the publicApp.
  */
 angular.module('publicApp')
-  .service('Authentication', function () {
-     var connected=true;
+  .service('Authentication', function ($http) {
+
+     var connected=false;
 
      return{
      	isConnected:function(){
-     		return connected;
+     		return connected; 
      	},
      	logout:function(){
-     		connected=false;
+            connected=false;
+     		return $http.get(API_URL+'/logout'); 
      	},
-     	login:function(){
-     		connected=true;
-     	}
+     	login:function(data){
+           return $http.post(API_URL+'/login',data); 
+     	},
+        register:function(data){
+            return $http.post(API_URL+'/register',data);
+        },
+        ok:function(){
+            connected=true;
+        }
      }
   });

@@ -9,8 +9,8 @@
  */
 angular.module('publicApp')
   .controller('LogoutCtrl', function (Authentication, $location) {
-    if(Authentication.isConnected()){
-    	Authentication.logout();
-    }
-    $location.path('/');
+    Authentication.logout()
+    	.success(function(){
+    			$location.path('/');
+    		});	
   });

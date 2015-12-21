@@ -1,4 +1,4 @@
-var user=require('./models/user');
+var User=require('./models/user.js');
 
 module.exports=function(app){
 
@@ -19,7 +19,7 @@ module.exports=function(app){
 		        res.status(500).send(errorMessages);
 			}
 			else{
-				res.send('/');
+				res.send('{"success":true}');
 			}
 		});
 	});

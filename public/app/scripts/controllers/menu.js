@@ -5,7 +5,8 @@ angular.module('publicApp')
     $scope.isActive=function(path){
     	return $location.path()==path;
     }
+
     $scope.isConnected=function(){
-    	return Authentication.isConnected();
+        return Authentication.isConnected();
     }
   });
