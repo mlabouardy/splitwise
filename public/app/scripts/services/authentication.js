@@ -26,6 +26,18 @@ angular.module('publicApp')
         register:function(data){
             return $http.post(API_URL+'/register',data);
         },
+        newGroup:function(data){
+            console.log("Auth...newGroup :"+data);
+            var req=$http.post(API_URL+'/addGroup',data,{headers:{'Access-Control-Allow-Origin':"*",
+                'Accept': "application/json, text/plain, */*",
+                'Access-Control-Allow-Headers':"Origin, X-Requested-With, Content-Type, Accept",
+                'Content-Type': "application/json;charset=utf-8"}});
+             //console.dir($http.post(API_URL+'/login',data)); 
+            //console.dir(req.$$state);
+            //console.dir(req);
+           return $http.post(API_URL+'/addGroup',data); 
+        ; 
+        },
         ok:function(){
             connected=true;
         }

@@ -21,7 +21,16 @@ var userSchema = mongoose.Schema({
       lastName:{
          type:String,
          required:true
+      },
+      groups:{
+         type:[mongoose.Schema.Types.Mixed],
+         require:false
+      },
+      friends:{
+         type:[mongoose.Schema.Types.Mixed],
+         require:false
       }
+
 });
 
 userSchema.plugin(uniqueValidator);
