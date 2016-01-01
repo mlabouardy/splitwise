@@ -3,11 +3,31 @@
 		<div class="col-md-12">
 			<div class="panel panel-primary">
 				<div class="panel-heading">
-					Groupe name
-					<div class="button-group pull-right">
-						<a class="btn btn-success custom-btn btn-xs">Add a bill</a>
+					<span ng-bind="name"></span>
+
+					<div class="button-group pull-right"
+					 ng-model="hash">
+						
+						<a  id="modal"  ng-href="#/group/{{hash}}#myModal5" role="button" class="btn btn-success custom-btn btn-xs" data-toggle="modal">Add a bill</a>
 						<a class="btn btn-success custom-btn btn-xs">Settle up</a>
-					</div>
+						<div id="myModal5" class="modal"  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+              <h4 class="modal-title">Modal header 1</h4>
+            </div>
+            <div class="modal-body">
+              <p>One fine body…</p>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>
+              <button class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+        </div>
+      </div>
+  					</div>
 				</div>
 				<div class="panel-body">
 					<table class="table table-bordered table-hover">
@@ -47,3 +67,9 @@
 		</div>
 	</div>
 </div>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+   
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" ></script>
