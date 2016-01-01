@@ -85,4 +85,16 @@ module.exports=function(app){
 		res.status(200).send('/')
 	})
 
+	app.get('/groups',function(req,res){
+		var query=User.find(null);
+		console.log('email: ' + mail);
+		query.where('email',mail);
+		
+		query.exec(function (err, data) {
+  			if (err) { throw err; }
+  			console.log(data);
+  			res.json(data);
+		});
+
+	});
 }

@@ -36,7 +36,9 @@ angular.module('publicApp')
             //console.dir(req.$$state);
             //console.dir(req);
            return $http.post(API_URL+'/addGroup',data); 
-        ; 
+        },
+        groups:function(){
+            return $http.get(API_URL+'/groups'); 
         },
         ok:function(){
             connected=true;
