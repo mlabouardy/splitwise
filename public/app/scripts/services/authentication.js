@@ -36,6 +36,9 @@ angular.module('publicApp')
         groups:function(){
             return $http.get(API_URL+'/groups'); 
         },
+        profile:function(data){
+            return $http.post(API_URL+'/profile',data);
+        },
         ok:function(){
             connected=true;
         }

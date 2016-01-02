@@ -2,22 +2,40 @@ var User=require('./models/user.js');
 var mail="";
 
 module.exports=function(app){
-	
+	app.post('/profile', function (req, res) {
+		console.log("=== profile ===");	
+		console.log("mail: "+ mail);
+		console.log("name: "+ req.body.firstname);
+		//console.dir(req.body)	
+		User.findOne({email : mail},function (err,user){
+			if(err) throw err;
+			user.email = req.body.email
+			user.password = req.body.password
+			user.firstName = req.body.firstName
+			user.lastName = req.body.lastName
+			mail=req.body.email
+			user.save(); 
+			res.send('{"success":true}');
+		});
+
+	});
+
 	app.post('/addGroup', function (req, res) {
 		console.log("=== addGroup ===");	
 		console.log("mailgroup: "+ mail);
-		console.log("groupname: "+ req.body.name)
+		console.log("groupname: "+ req.body.name);
 		//console.dir(req.body)	
 		User.findOne({email : mail},function (err,user){
 			if(err) throw err;
 			var id= user.groups.length
 			user.groups.push({"id":id, "name":req.body.name});
 			user.save(); 
-			res.send('{"success":true}')
-		})
+			res.send('{"success":true}');
+		});
 
-	})
+	});
 
+	
 	app.post('/register',function (req,res){
 		var user = new User()
 
@@ -84,6 +102,7 @@ module.exports=function(app){
 		req.session.destroy()
 		res.status(200).send('/')
 	})
+
 
 	app.get('/groups',function(req,res){
 		var query=User.find(null);
