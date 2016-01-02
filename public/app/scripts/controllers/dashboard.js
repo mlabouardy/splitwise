@@ -13,13 +13,23 @@ angular.module('publicApp')
     	$scope.newGroup=function(){
     		Authentication.newGroup({name:$scope.groupname})
     		.success(function(data){
- 				toastr.success('Group successfuly created!', 'Splitwise');
- 			})
- 			.error(function(data){
- 				toastr.error(data, 'Add group failed');
- 				$scope.user={};
- 			});
-	    }
+ 				 toastr.success('Group successfuly created!', 'Splitwise');
+ 			  })
+ 			  .error(function(data){
+ 				 toastr.error(data, 'Add group failed');
+ 				 $scope.user={};
+ 			  });
+      }
+      $scope.send=function(){
+        Authentication.newFriend({email:$scope.email})
+        .success(function(data){
+          toastr.success('friend successfuly added!', 'Splitwise');
+      })
+      .error(function(data){
+        toastr.error(data, 'Add friend failed');
+      });
+      }
+
       //toastr.success('Group successfuly created!', 'Splitwise');
     }else{
     	$location.path('/');

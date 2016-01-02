@@ -52,6 +52,10 @@ angular
         templateUrl: 'views/groups.html',
         controller: 'GroupsCtrl'
       })
+      .when('/friends', {
+        templateUrl: 'views/friends.html',
+        controller: 'FriendsCtrl'
+      })
       .when('/group/:id', {
         templateUrl: 'views/group.html',
         controller: 'GroupDetailCtrl'

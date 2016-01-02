@@ -19,6 +19,20 @@ module.exports=function(app){
 		});
 
 	});
+	app.post('/addFriend', function (req, res) {
+		console.log("=== addFriend ===");	
+		console.log("mailgroup: "+ mail);
+		console.log("groupemail: "+ req.body.email);
+		//console.dir(req.body)	
+		User.findOne({email : mail},function (err,user){
+			if(err) throw err;
+			var id= user.friends.length
+			user.friends.push({"id":id, "email":req.body.email});
+			user.save(); 
+			res.send('{"success":true}');
+		});
+
+	});
 
 	app.post('/addGroup', function (req, res) {
 		console.log("=== addGroup ===");	

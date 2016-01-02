@@ -27,11 +27,10 @@ angular.module('publicApp')
             return $http.post(API_URL+'/register',data);
         },
         newGroup:function(data){
-            var req=$http.post(API_URL+'/addGroup',data,{headers:{'Access-Control-Allow-Origin':"*",
-                'Accept': "application/json, text/plain, */*",
-                'Access-Control-Allow-Headers':"Origin, X-Requested-With, Content-Type, Accept",
-                'Content-Type': "application/json;charset=utf-8"}});
-           return $http.post(API_URL+'/addGroup',data); 
+                  return $http.post(API_URL+'/addGroup',data); 
+        },
+        newFriend:function(data){
+                  return $http.post(API_URL+'/addFriend',data); 
         },
         groups:function(){
             return $http.get(API_URL+'/groups'); 
