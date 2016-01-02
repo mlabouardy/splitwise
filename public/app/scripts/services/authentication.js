@@ -11,6 +11,7 @@ angular.module('publicApp')
   .service('Authentication', function ($http) {
 
      var connected=false;
+     var session="";
 
      return{
      	isConnected:function(){
@@ -21,21 +22,25 @@ angular.module('publicApp')
      		return $http.get(API_URL+'/logout'); 
      	},
      	login:function(data){
+           session=data.session;
            return $http.post(API_URL+'/login',data); 
      	},
         register:function(data){
             return $http.post(API_URL+'/register',data);
         },
         newGroup:function(data){
-                  return $http.post(API_URL+'/addGroup',data); 
+            data.session=session;
+            return $http.post(API_URL+'/addGroup',data); 
         },
         newFriend:function(data){
-                  return $http.post(API_URL+'/addFriend',data); 
+            data.session=session;
+            return $http.post(API_URL+'/addFriend',data); 
         },
-        groups:function(){
-            return $http.get(API_URL+'/groups'); 
+        getUser:function(){
+            return $http.get(API_URL+'/user/:'+session);  
         },
         profile:function(data){
+            data.session=session;
             return $http.post(API_URL+'/profile',data);
         },
         ok:function(){

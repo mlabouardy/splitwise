@@ -13,7 +13,7 @@ angular.module('publicApp')
       var url = $location.url();
       var allGroups;
       //console.dir(url);
-      Authentication.groups()
+      Authentication.getUser()
         .then(function successCallback(response) {
           allGroups=response.data[0].groups;
           var temp=url.split("/");

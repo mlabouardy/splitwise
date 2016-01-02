@@ -12,8 +12,12 @@
  	if(Authentication.isConnected()){
  		$location.path('/');
  	}else{
+
  		$scope.login=function(){
- 			Authentication.login($scope.user)
+ 			var info=$scope.user;
+ 			info.session=$scope.user.email;
+ 			console.dir(info);
+ 			Authentication.login(info)
  			.success(function(data){
  				Authentication.ok();
  				$location.path('/dashboard');

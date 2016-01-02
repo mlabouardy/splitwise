@@ -11,7 +11,7 @@ angular.module('publicApp')
   .controller('ProfileCtrl', function ($scope,Authentication, $location) {
   	if(Authentication.isConnected()){
   		$scope.name="";
-  		Authentication.groups()
+  		Authentication.getUser()
         .then(function successCallback(response) {
         	$scope.user=response.data[0];
           	$scope.name=response.data[0].firstName;

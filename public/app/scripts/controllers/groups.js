@@ -10,7 +10,7 @@
 angular.module('publicApp')
   .controller('GroupsCtrl', function ($scope, Authentication) {
   		if(Authentication.isConnected()){
-  			Authentication.groups()
+  			Authentication.getUser()
   			.then(function successCallback(response) {
     			$scope.groups=response.data[0].groups;
   			});

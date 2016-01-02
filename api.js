@@ -1,19 +1,18 @@
 var User=require('./models/user.js');
-var mail="";
+
 
 module.exports=function(app){
 	app.post('/profile', function (req, res) {
 		console.log("=== profile ===");	
-		console.log("mail: "+ mail);
+		console.log("session: "+ req.body.session);
 		console.log("name: "+ req.body.firstname);
 		//console.dir(req.body)	
-		User.findOne({email : mail},function (err,user){
+		User.findOne({email : req.body.session},function (err,user){
 			if(err) throw err;
 			user.email = req.body.email
 			user.password = req.body.password
 			user.firstName = req.body.firstName
 			user.lastName = req.body.lastName
-			mail=req.body.email
 			user.save(); 
 			res.send('{"success":true}');
 		});
@@ -21,10 +20,10 @@ module.exports=function(app){
 	});
 	app.post('/addFriend', function (req, res) {
 		console.log("=== addFriend ===");	
-		console.log("mailgroup: "+ mail);
+		console.log("sessiongroup: "+ req.body.session);
 		console.log("groupemail: "+ req.body.email);
 		//console.dir(req.body)	
-		User.findOne({email : mail},function (err,user){
+		User.findOne({email : req.body.session},function (err,user){
 			if(err) throw err;
 			var id= user.friends.length
 			user.friends.push({"id":id, "email":req.body.email});
@@ -36,10 +35,10 @@ module.exports=function(app){
 
 	app.post('/addGroup', function (req, res) {
 		console.log("=== addGroup ===");	
-		console.log("mailgroup: "+ mail);
+		console.log("sessiongroup: "+ req.body.session);
 		console.log("groupname: "+ req.body.name);
 		//console.dir(req.body)	
-		User.findOne({email : mail},function (err,user){
+		User.findOne({email : req.body.session},function (err,user){
 			if(err) throw err;
 			var id= user.groups.length
 			user.groups.push({"id":id, "name":req.body.name});
@@ -82,8 +81,7 @@ module.exports=function(app){
 			}
 			else{
 				if (req.body.password === user.password){
-					mail=req.body.email
-					console.log("mail: "+mail)
+					console.log("session: "+req.body.session)
 					req.session.user = user
 					res.send('/board')
 				}else{
@@ -118,10 +116,12 @@ module.exports=function(app){
 	})
 
 
-	app.get('/groups',function(req,res){
+	app.get('/user/:session',function(req,res){
+		console.log("=== groups ===")
 		var query=User.find(null);
-		console.log('email: ' + mail);
-		query.where('email',mail);
+		var session= req.params.session.split(":")[1];
+		console.log(session)
+		query.where('email',session);
 		
 		query.exec(function (err, data) {
   			if (err) { throw err; }
