@@ -8,8 +8,14 @@
  * Controller of the publicApp
  */
 angular.module('publicApp')
-  .controller('FriendInviteCtrl', function (Authentication, $scope) {
+  .controller('FriendInviteCtrl', function (Authentication, $scope, $location) {
     if(Authentication.isConnected()){
+        $scope.name="";
+        Authentication.groups()
+        .then(function successCallback(response) {
+            //$scope.user=response.data[0];
+            $scope.name=response.data[0].firstName;
+         });
     	$scope.tabs = [
             { title: "Balances", content:"main.tab1"},
             { title: "Upcoming Bills", content:"main.tab2" },
