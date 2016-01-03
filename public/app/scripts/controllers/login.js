@@ -16,7 +16,6 @@
  		$scope.login=function(){
  			var info=$scope.user;
  			info.session=$scope.user.email;
- 			console.dir(info);
  			Authentication.login(info)
  			.success(function(data){
  				Authentication.ok();

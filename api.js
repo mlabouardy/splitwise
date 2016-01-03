@@ -41,8 +41,8 @@ module.exports=function(app){
    		 var today = dd+'/'+mm+'/'+yyyy;
 		User.findOne({email : req.body.session},function (err,user){
 			if(err) throw err;
-			var id= user.expenses.length;
-			user.expenses.push({"desc":req.body.desc,"price":req.body.price,"groupname":user.groups[groupid].name,"date":today});
+			var id= user.expenses.length+1;
+			user.expenses.push({"id": id,"desc":req.body.desc,"price":req.body.price,"groupname":user.groups[groupid].name,"date":today});
 			user.groups[groupid].bills.push({"desc":req.body.desc,"price":req.body.price});
 			console.log(user.groups);
 			query=user.groups;
@@ -70,6 +70,20 @@ module.exports=function(app){
 	});
 
 	app.post('/addGroup', function (req, res) {
+		console.log("=== addGroup ===");	
+		console.log("sessiongroup: "+ req.body.session);
+		console.log("groupname: "+ req.body.name);
+		//console.dir(req.body)	
+		User.findOne({email : req.body.session},function (err,user){
+			if(err) throw err;
+			var id= user.groups.length
+			user.groups.push({"id":id, "name":req.body.name, "bills": [mongoose.Schema.Types.Mixed] });
+			user.save(); 
+			res.send('{"success":true}');
+		});
+
+	});
+	app.post('/removeGroup', function (req, res) {
 		console.log("=== addGroup ===");	
 		console.log("sessiongroup: "+ req.body.session);
 		console.log("groupname: "+ req.body.name);
