@@ -28,6 +28,10 @@ angular.module('publicApp')
         register:function(data){
             return $http.post(API_URL+'/register',data);
         },
+        newBill:function(data){
+            data.session=session;
+            return $http.post(API_URL+'/addBill',data); 
+        },
         newGroup:function(data){
             data.session=session;
             return $http.post(API_URL+'/addGroup',data); 

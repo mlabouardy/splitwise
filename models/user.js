@@ -24,7 +24,7 @@ var userSchema = mongoose.Schema({
       },
       groups:{
          type:[mongoose.Schema.Types.Mixed],
-         require:false
+         require:false,
       },
       friends:{
          type:[mongoose.Schema.Types.Mixed],

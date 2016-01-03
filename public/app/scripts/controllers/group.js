@@ -21,12 +21,22 @@ angular.module('publicApp')
           if(Array.isArray(id)){
             id=id[0];
           }
-          console.dir(id);
-          console.dir(allGroups);
           var groupCurrent = allGroups[id];
           console.dir(groupCurrent);
           $scope.name=groupCurrent.name;
           $scope.hash=id;
+
+          $scope.newBill=function(){
+            $scope.groupbill.groupid=groupCurrent.id;
+            Authentication.newBill($scope.groupbill)
+            .success(function(data){
+            toastr.success('Bill successfuly created!', 'Splitwise');
+            })
+            .error(function(data){
+            toastr.error(data, 'Add Bill failed');
+        });
+            $scope.bills=groupCurrent.bills;
+      }
 
         });
         

@@ -63,8 +63,13 @@
 								<th>Price</th>
 							</tr>
 						</thead>
-						<tbody>
-
+						<tbody class="list-bill" ng-repeat="bill in bills">
+						
+						<tr class="list-bill-item"> <th>{{bill.desc}}</th>
+							<th>{{bill.desc}}</th>
+							<th>{{bill.price}}</th>
+						</tr>
+					</ul>
 						</tbody>
 					</table>
 				</div>

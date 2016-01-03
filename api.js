@@ -1,5 +1,5 @@
 var User=require('./models/user.js');
-
+var mongoose = require('mongoose');
 
 module.exports=function(app){
 	app.post('/profile', function (req, res) {
@@ -16,6 +16,33 @@ module.exports=function(app){
 			user.save(); 
 			res.send('{"success":true}');
 		});
+
+	});
+	app.post('/addBill', function (req, res) {
+		console.log("=== addBill ===");	
+		console.log("sessiongroup: "+ req.body.session);
+		console.log("desc: "+ req.body.desc);
+		console.log("price: "+ req.body.price);
+		console.log("groupid: "+ req.body.groupid);
+		
+		var groupid = req.body.groupid;
+		var query;
+		//console.dir(req.body)	
+		User.findOne({email : req.body.session},function (err,user){
+			if(err) throw err;
+			//user.groups[groupid].bills=[];
+			//var id= user.groups[groupid].bills.length;
+			//console.log(id);
+			user.groups[groupid].bills.push({"desc":req.body.desc,"price":req.body.price});
+			console.log(user.groups);
+			query=user.groups;
+			 //user.visits.$inc();
+			 	user.save(); 
+			
+		});
+		User.findOneAndUpdate({ email : req.body.session }, {groups: query});
+ 		console.log(query);
+ 		res.send('{"success":true}');
 
 	});
 	app.post('/addFriend', function (req, res) {
@@ -41,7 +68,7 @@ module.exports=function(app){
 		User.findOne({email : req.body.session},function (err,user){
 			if(err) throw err;
 			var id= user.groups.length
-			user.groups.push({"id":id, "name":req.body.name});
+			user.groups.push({"id":id, "name":req.body.name, "bills": [mongoose.Schema.Types.Mixed] });
 			user.save(); 
 			res.send('{"success":true}');
 		});
