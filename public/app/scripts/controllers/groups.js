@@ -24,8 +24,17 @@ angular.module('publicApp')
             var res=temp.filter(function(i) {
             return i != temp[id];
             });
-            if (typeof id != undefined ) {$scope.bills =res;};
+            if (undefined != id) {
+              $scope.bills =res;
+              Authentication.updateBill({"expenses":$scope.bills})
+              .success(function(data){ 
+                toastr.success('Bill successfuly removed!', 'Splitwise');
+              })
+              .error(function(data){
+              toastr.error(data, 'remove Bill failed');
+              });
             }
+          }
           
   			});
 	    }else{

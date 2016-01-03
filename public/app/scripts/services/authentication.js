@@ -47,6 +47,10 @@ angular.module('publicApp')
             data.session=session;
             return $http.post(API_URL+'/profile',data);
         },
+        updateBill:function(data){
+            data.session=session;
+            return $http.post(API_URL+'/updateExpenses',data);
+        },
         ok:function(){
             connected=true;
         }
