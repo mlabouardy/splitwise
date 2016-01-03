@@ -26,12 +26,27 @@ angular.module('publicApp')
           $scope.name=groupCurrent.name;
           $scope.hash=id;
           $scope.bills=response.data[0].expenses;
-
           $scope.newBill=function(){
             $scope.groupbill.groupid=groupCurrent.id;
             Authentication.newBill($scope.groupbill)
             .success(function(data){
-             $scope.bills.push($scope.groupbill); 
+             var temp= $scope.groupbill;
+             temp.groupname=$scope.name;
+             var now = new Date(Date.now());
+            var dd = now.getDate();
+            var mm = now.getMonth()+1; //January is 0!
+
+            var yyyy = now.getFullYear();
+            if(dd<10){
+              dd='0'+dd
+            } 
+            if(mm<10){
+               mm='0'+mm
+             } 
+             var today = dd+'/'+mm+'/'+yyyy;
+             temp.date=today;
+             $scope.bills.push(temp); 
+            // $location.path(url);
             toastr.success('Bill successfuly created!', 'Splitwise');
             })
             .error(function(data){
