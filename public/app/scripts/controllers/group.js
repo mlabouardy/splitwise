@@ -22,20 +22,22 @@ angular.module('publicApp')
             id=id[0];
           }
           var groupCurrent = allGroups[id];
-          console.dir(groupCurrent);
+          console.dir(response.data[0].expenses);
           $scope.name=groupCurrent.name;
           $scope.hash=id;
+          $scope.bills=response.data[0].expenses;
 
           $scope.newBill=function(){
             $scope.groupbill.groupid=groupCurrent.id;
             Authentication.newBill($scope.groupbill)
             .success(function(data){
+             $scope.bills.push($scope.groupbill); 
             toastr.success('Bill successfuly created!', 'Splitwise');
             })
             .error(function(data){
             toastr.error(data, 'Add Bill failed');
         });
-            $scope.bills=groupCurrent.bills;
+            //console.dir($scope.bills);
       }
 
         });

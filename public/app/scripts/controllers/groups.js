@@ -13,6 +13,8 @@ angular.module('publicApp')
   			Authentication.getUser()
   			.then(function successCallback(response) {
     			$scope.groups=response.data[0].groups;
+          $scope.bills=response.data[0].expenses;
+
   			});
 	    }else{
 	      $location.path('/');

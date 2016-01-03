@@ -29,8 +29,11 @@ var userSchema = mongoose.Schema({
       friends:{
          type:[mongoose.Schema.Types.Mixed],
          require:false
+      },
+      expenses:{
+         type:[mongoose.Schema.Types.Mixed],
+         require:false
       }
-
 });
 
 userSchema.plugin(uniqueValidator);

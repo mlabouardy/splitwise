@@ -27,17 +27,26 @@ module.exports=function(app){
 		
 		var groupid = req.body.groupid;
 		var query;
-		//console.dir(req.body)	
+		var now = new Date(Date.now());
+		var dd = now.getDate();
+    	var mm = now.getMonth()+1; //January is 0!
+
+    	var yyyy = now.getFullYear();
+    	if(dd<10){
+       	 dd='0'+dd
+   		 } 
+   		 if(mm<10){
+      	  mm='0'+mm
+   		 } 
+   		 var today = dd+'/'+mm+'/'+yyyy;
 		User.findOne({email : req.body.session},function (err,user){
 			if(err) throw err;
-			//user.groups[groupid].bills=[];
-			//var id= user.groups[groupid].bills.length;
-			//console.log(id);
+			var id= user.expenses.length;
+			user.expenses.push({"desc":req.body.desc,"price":req.body.price,"groupname":user.groups[groupid].name,"date":today});
 			user.groups[groupid].bills.push({"desc":req.body.desc,"price":req.body.price});
 			console.log(user.groups);
 			query=user.groups;
-			 //user.visits.$inc();
-			 	user.save(); 
+			 user.save(); 
 			
 		});
 		User.findOneAndUpdate({ email : req.body.session }, {groups: query});

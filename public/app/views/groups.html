@@ -8,14 +8,24 @@
 				<div class="panel-body">
 					<table class="table table-bordered table-hover">
 						<thead>
-							<tr>
+							<tr class="active">
 								<th>Date</th>
 								<th>Description</th>
 								<th>Price</th>
+								<th>Group</th>
 							</tr>
 						</thead>
 						<tbody>
+							<tbody class="list-bill" ng-repeat="bill in bills">
+						
+						<tr class="list-bill-item"> <th>{{bill.date}}</th>
+							<th>{{bill.desc}}</th>
+							<th>{{bill.price}} €</th>
+							<th>{{bill.groupname}}</th>
 
+						</tr>
+					</ul>
+						
 						</tbody>
 					</table>
 				</div>
