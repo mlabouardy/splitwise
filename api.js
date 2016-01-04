@@ -1,7 +1,43 @@
 var User=require('./models/user.js');
 var mongoose = require('mongoose');
+var express=require('express');
+var nodemailer = require("nodemailer");
+var app=express();
+/*
+Here we are configuring our SMTP Server details.
+STMP is mail server which is responsible for sending and recieving email.
+*/
+var smtpTransport = nodemailer.createTransport("SMTP",{
+service: "Gmail",
+auth: {
+user: "totodukamer@gmail.com",
+pass: "abcDEF123456"
+}
+});
 
 module.exports=function(app){
+	app.get('/',function(req,res){
+	console.log("=== / ===");
+res.sendfile('public/friends_invite.html');
+});
+app.get('/send',function(req,res){
+	console.log("=== sent ===");	
+var mailOptions={
+to : req.query.to,
+subject : req.query.subject,
+text : req.query.text
+}
+console.log(mailOptions);
+smtpTransport.sendMail(mailOptions, function(error, response){
+if(error){
+console.log(error);
+res.end("error");
+}else{
+console.log("Message sent: " + response.message);
+res.end("sent");
+}
+});
+});
 	app.post('/profile', function (req, res) {
 		console.log("=== profile ===");	
 		console.log("session: "+ req.body.session);

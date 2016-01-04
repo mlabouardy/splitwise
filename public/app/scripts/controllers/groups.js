@@ -15,11 +15,9 @@ angular.module('publicApp')
     			$scope.groups=response.data[0].groups;
           $scope.bills=response.data[0].expenses;
           var url=$location.url().split("/");
-          console.dir(url);
           var id=url[1].split("#");
           if(Array.isArray(id)){
             id=id[1];
-            console.dir(id);
             var temp= $scope.bills;
             var res=temp.filter(function(i) {
             return i != temp[id];

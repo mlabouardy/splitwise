@@ -22,10 +22,16 @@ angular.module('publicApp')
             id=id[0];
           }
           var groupCurrent = allGroups[id];
-          console.dir(response.data[0].expenses);
+          //console.dir(response.data[0].expenses); 
           $scope.name=groupCurrent.name;
           $scope.hash=id;
+          $scope.friends=response.data[0].friends;
           $scope.bills=response.data[0].expenses;
+          $scope.setDesc= function(bill) {
+          $scope.desc=bill.desc;
+          //console.dir($(this).html());
+          //console.dir($(this).text());
+          }
           $scope.newBill=function(){
             $scope.groupbill.groupid=groupCurrent.id;
             Authentication.newBill($scope.groupbill)
@@ -57,9 +63,12 @@ angular.module('publicApp')
 
         });
         
+      
+         
+         
       $scope.tabs = [
             { title: "Balances", content:"main.tab1"},
-            { title: "Upcoming Bills", content:"main.tab2" },
+            { title: "Upcoming Bills", content:"main.tab2"},
             { title: "Trends", content:"main.tab3"},
             { title: "Whiteboards", content:"main.tab3"},
             { title: "Settings", content:"main.tab3"}

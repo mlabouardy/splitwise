@@ -10,7 +10,7 @@
 					 ng-model="hash">
 						
 						<a  id="modal"  ng-href="#/group/{{hash}}#addBill" role="button" class="btn btn-success custom-btn btn-xs" data-toggle="modal">Add a bill</a>
-						<a class="btn btn-success custom-btn btn-xs">Settle up</a>	
+						<a id="modal"  ng-href="#/group/{{hash}}#settleup" role="button" class="btn btn-success custom-btn btn-xs" data-toggle="modal">Settle up</a>	
 		
 
 						<div id="addBill" class="modal"  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -53,6 +53,81 @@
       	  </div>
       	</div>
       </div>
+
+     
+
+						<div id="settleup" class="modal"  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        				<div class="modal-dialog">
+          			
+						<div class="panel panel-primary">
+					<div class="panel-heading">
+							
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>  	settleup   
+					</div>
+					<div class="modal-body">
+					 <div class="center-div" >
+							 <div class="panel-body">
+					<table class="table table-bordered table-hover">
+						<thead>
+							<tr class="active">
+								<th>Date</th>
+								<th>Description</th>
+								<th>Price</th>
+								<th>Share</th>
+							</tr>
+						</thead>
+						<tbody for="singleSelect"  ng-model="desc"class="" ng-repeat="bill in bills |filter:name">
+						
+						<tr> <th>{{bill.date}}</th>
+							<th>{{bill.desc}}</th>
+							<th>{{bill.price}} €</th><th> 
+							<button id="myId" ng-click="setDesc(bill)" class="btn btn-success custom-btn btn-xs" type="button" data-toggle="collapse" data-target="#paid" aria-expanded="false" aria-controls="collapseExample">
+  						<i  type="button" class="fa fa-money" data-toggle="tooltip" data-placement="left" title="Tooltip on left"></i>
+						</button>
+							</th>
+			<div class="collapse" id="paid">
+  			<div class="well">
+   			<div class="row">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<i class="fa fa-money"></i>
+					{{desc}}
+				</div>
+				<div class="panel-body">
+				<div class="list-group" ng-repeat="friend in friends">
+				<div class="input-group">
+  <span class="input-group-addon"><i class="fa fa-user"></i> {{friend.email}}</span> 
+  <input class="form-control" type="text" placeholder="0.00 €">
+</div>
+</div>	
+</div>
+</div>
+</div>
+ </div>
+ </div>	
+
+						</tr>
+					</ul>
+						</tbody>
+					</table>
+				</div>
+					      	<br/><br/>
+					    
+						
+						</div>
+            		</div>
+            		
+     
+  						</div>
+						</div>
+            		</div>
+            		
+          
+      	</div>
+      </div>
+
+      
+      
                      		
 				<div class="panel-body">
 					<table class="table table-bordered table-hover">
@@ -97,5 +172,3 @@
 		</div>
 	</div>
 </div>
-
-		
