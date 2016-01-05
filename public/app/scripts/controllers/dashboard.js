@@ -9,7 +9,8 @@
  */
 angular.module('publicApp')
   .controller('DashboardCtrl', function ($scope, Authentication) {
-	if(Authentication.isConnected()){
+	
+  if(Authentication.isConnected()){
     	$scope.newGroup=function(){
     		Authentication.newGroup({name:$scope.groupname})
     		.success(function(data){

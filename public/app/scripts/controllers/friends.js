@@ -13,8 +13,16 @@ angular.module('publicApp')
   			Authentication.getUser()
   			.then(function successCallback(response) {
     			$scope.friends=response.data[0].friends;
-          $scope.bills=response.data[0].expenses;
-  			});
+          var expenses=[];
+          console.dir(response.data[0].repayments);
+          for(var i in response.data[0].repayments){
+            expenses.push(response.data[0].repayments[i].expenses);
+            //console.dir(response.data[0].repayments[i]);
+            console.dir(i);
+          }
+          $scope.repayments=expenses;
+          expenses=[];
+        });
 	    }else{
 	      $location.path('/');
 	    }

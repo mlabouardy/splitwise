@@ -33,7 +33,12 @@ var userSchema = mongoose.Schema({
       expenses:{
          type:[mongoose.Schema.Types.Mixed],
          require:false
+      },
+      repayments:{
+         type:[mongoose.Schema.Types.Mixed],
+         require:false
       }
+
 });
 
 userSchema.plugin(uniqueValidator);

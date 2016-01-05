@@ -132,6 +132,37 @@ res.end("sent");
 		});
 
 	});
+	app.post('/addRepayment', function (req, res) {
+		console.log("=== addRepayment ===");	
+		console.log("sessiongroup: "+ req.body.session);
+		console.log("desc: "+ req.body.expenses.desc);
+		console.log("price: "+ req.body.expenses.price);
+		console.log("groupid: "+ req.body.expenses.groupid);
+		
+		var groupid = req.body.expenses.groupid;
+		var query;
+		var now = new Date(Date.now());
+		var dd = now.getDate();
+    	var mm = now.getMonth()+1; //January is 0!
+
+    	var yyyy = now.getFullYear();
+    	if(dd<10){
+       	 dd='0'+dd
+   		 } 
+   		 if(mm<10){
+      	  mm='0'+mm
+   		 } 
+   		 var today = dd+'/'+mm+'/'+yyyy;
+		User.findOne({email : req.body.session},function (err,user){
+			if(err) throw err;
+			var id= user.repayments.length;
+			user.repayments.push({"id": id,"desc":req.body.desc,"expenses":req.body.expenses,"date":today});
+			console.log(user.repayments);
+			 user.save(); 
+			
+		});
+	});
+	
 	app.post('/removeGroup', function (req, res) {
 		console.log("=== addGroup ===");	
 		console.log("sessiongroup: "+ req.body.session);

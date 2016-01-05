@@ -3,7 +3,7 @@
 		<div class="col-md-12">
 			<div class="panel panel-primary">
 				<div class="panel-heading">
-					All expenses
+					All repayments
 				</div>
 				<div class="panel-body">
 					<table class="table table-bordered table-hover">
@@ -14,7 +14,7 @@
 								<th>Price</th>
 							</tr>
 						</thead>
-						<tbody class="list-bill" ng-repeat="bill in bills">
+						<tbody class="list-bill" ng-repeat="bill in repayments track by $index">
 						
 						<tr class="list-bill-item"> <th>{{bill.date}}</th>
 							<th>{{bill.desc}}</th>

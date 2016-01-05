@@ -91,15 +91,16 @@
 			<div class="panel panel-primary">
 				<div class="panel-heading">
 					<i class="fa fa-money"></i>
-					{{desc}}
+					{{desc}}: {{total}} €
 				</div>
 				<div class="panel-body">
 				<div class="list-group" ng-repeat="friend in friends">
 				<div class="input-group">
   <span class="input-group-addon"><i class="fa fa-user"></i> {{friend.email}}</span> 
-  <input class="form-control" type="text" placeholder="0.00 €">
+  <input class="form-control" ng-model="price[$index]" type="text" placeholder="0.00 €">
 </div>
-</div>	
+</div>
+<input type="button" class="btn btn-success custom-btn" class="close" data-dismiss="modal" aria-hidden="true" value="Save" ng-click="splitBill()"/>	
 </div>
 </div>
 </div>

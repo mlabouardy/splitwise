@@ -14,7 +14,7 @@ angular.module('publicApp')
   		Authentication.getUser()
         .then(function successCallback(response) {
         	$scope.user=response.data[0];
-          	$scope.name=response.data[0].firstName;
+          	$scope.name=response.data[0].firstName;    	
          });
 	   //$(":file").filestyle({input: false,size: "sm", buttonText: "Choose picture",badge:false});
 	   $scope.update=function(){

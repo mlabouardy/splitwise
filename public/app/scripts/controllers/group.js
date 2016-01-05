@@ -27,11 +27,42 @@ angular.module('publicApp')
           $scope.hash=id;
           $scope.friends=response.data[0].friends;
           $scope.bills=response.data[0].expenses;
+          $scope.price=[];
           $scope.setDesc= function(bill) {
           $scope.desc=bill.desc;
-          //console.dir($(this).html());
-          //console.dir($(this).text());
+          $scope.total=bill.price;
+          //}
+          $scope.splitBill= function(){
+            console.dir($scope.price);
+            var tot=0;
+            var rpmt={};
+            rpmt.desc=[];
+            for (var i = 0; i < $scope.price.length; i++) {
+              if (!isNaN(parseInt($scope.price[i]))) {
+              tot+=parseInt($scope.price[i]);
+              rpmt.desc.push({"friend":$scope.friends[i],
+                              "cash":$scope.price[i]});
+
+              };
+
+            };
+            if(tot==$scope.total){
+
+            rpmt.expenses=bill;
+            Authentication.newRepayment(rpmt)
+            .success(function(data){
+            toastr.success('newRepayment created!', 'Splitwise');
+            })
+            .error(function(data){
+            toastr.error(data, ' add repayment  failed');
+        });
+              toastr.success('Good !', 'Splitwise');
+           }
+            else{
+              toastr.error('total not OK');
+            }
           }
+        }
           $scope.newBill=function(){
             $scope.groupbill.groupid=groupCurrent.id;
             Authentication.newBill($scope.groupbill)

@@ -32,6 +32,10 @@ angular.module('publicApp')
             data.session=session;
             return $http.post(API_URL+'/addBill',data); 
         },
+        newRepayment:function(data){
+            data.session=session;
+            return $http.post(API_URL+'/addRepayment',data); 
+        },
         newGroup:function(data){
             data.session=session;
             return $http.post(API_URL+'/addGroup',data); 

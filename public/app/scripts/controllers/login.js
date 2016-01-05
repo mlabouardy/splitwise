@@ -19,6 +19,7 @@
  			Authentication.login(info)
  			.success(function(data){
  				Authentication.ok();
+ 				$location.path('/profile');
  				$location.path('/dashboard');
  			})
  			.error(function(data){
