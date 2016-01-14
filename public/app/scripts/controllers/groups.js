@@ -13,7 +13,7 @@ angular.module('publicApp')
   			Authentication.getUser()
   			.then(function successCallback(response) {
     			$scope.groups=response.data[0].groups;
-          $scope.bills=response.data[0].expenses;
+          /*$scope.bills=response.data[0].expenses;
           var url=$location.url().split("/");
           var id=url[1].split("#");
           if(Array.isArray(id)){
@@ -25,15 +25,15 @@ angular.module('publicApp')
             if (undefined != id) {
               $scope.bills =res;
               Authentication.updateBill({"expenses":$scope.bills})
-              .success(function(data){ 
+              .success(function(data){
                 toastr.success('Bill successfuly removed!', 'Splitwise');
               })
               .error(function(data){
               toastr.error(data, 'remove Bill failed');
               });
             }
-          }
-          
+          }*/
+
   			});
 	    }else{
 	      $location.path('/');

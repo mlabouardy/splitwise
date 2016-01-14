@@ -22,7 +22,7 @@ angular.module('publicApp')
             id=id[0];
           }
           var groupCurrent = allGroups[id];
-          //console.dir(response.data[0].expenses); 
+          //console.dir(response.data[0].expenses);
           $scope.name=groupCurrent.name;
           $scope.hash=id;
           $scope.friends=response.data[0].friends;
@@ -76,13 +76,13 @@ angular.module('publicApp')
             var yyyy = now.getFullYear();
             if(dd<10){
               dd='0'+dd
-            } 
+            }
             if(mm<10){
                mm='0'+mm
-             } 
+             }
              var today = dd+'/'+mm+'/'+yyyy;
              temp.date=today;
-             $scope.bills.push(temp); 
+             $scope.bills.push(temp);
             // $location.path(url);
             toastr.success('Bill successfuly created!', 'Splitwise');
             })
@@ -93,10 +93,10 @@ angular.module('publicApp')
       }
 
         });
-        
-      
-         
-         
+
+
+
+
       $scope.tabs = [
             { title: "Balances", content:"main.tab1"},
             { title: "Upcoming Bills", content:"main.tab2"},

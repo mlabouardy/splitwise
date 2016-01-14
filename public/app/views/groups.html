@@ -17,7 +17,7 @@
 						</thead>
 						<tbody>
 							<tbody class="list-bill" ng-repeat="bill in bills">
-						
+
 						<tr class="list-bill-item"> <th>{{bill.date}}</th>
 							<th>{{bill.desc}}</th>
 							<th>{{bill.price}} €</th>
@@ -26,7 +26,7 @@
 
 						</tr>
 					</ul>
-						
+
 						</tbody>
 					</table>
 				</div>
@@ -41,8 +41,8 @@
 				</div>
 				<div class="panel-body">
 					<ul class="list-group" ng-repeat="group in groups">
-						
-						<li class="list-group-item"><i class="fa fa-users"></i> <span>{{group.name}}</span><a class="btn btn-success pull-right btn-xs" ng-href="#/group/{{group.id}}">View</a></li>
+
+						<li class="list-group-item"><i class="fa fa-users"></i> <span>{{group.name}}</span><a class="btn btn-success pull-right btn-xs" ng-href="#/group/{{group._id}}">View</a></li>
 					</ul>
 				</div>
 			</div>

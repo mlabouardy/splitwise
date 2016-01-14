@@ -9,7 +9,7 @@
  */
 angular.module('publicApp')
   .controller('DashboardCtrl', function ($scope, Authentication) {
-	
+
   if(Authentication.isConnected()){
     	$scope.newGroup=function(){
     		Authentication.newGroup({name:$scope.groupname})
@@ -24,7 +24,11 @@ angular.module('publicApp')
       $scope.send=function(){
         Authentication.newFriend({email:$scope.email})
         .success(function(data){
-          toastr.success('friend successfuly added!', 'Splitwise');
+          if(data.success)
+            toastr.success('Friend successfuly added!', 'Splitwise');
+          else {
+            toastr.error('User doesnt exist!', 'Splitwise');
+          }
       })
       .error(function(data){
         toastr.error(data, 'Add friend failed');
