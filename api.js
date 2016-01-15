@@ -90,9 +90,14 @@ module.exports=function(app){
 		var today = dd+'/'+mm+'/'+yyyy;
 		User.findOne({email : req.body.session},function (err,user){
 			if(err) throw err;
-			var id= user.expenses.length;
-			user.expenses.push({"id": id,"desc":req.body.desc,"price":req.body.price,"groupname":user.groups[groupid].name,"date":today});
-			user.groups[groupid].bills.push({"desc":req.body.desc,"price":req.body.price});
+			//var id= user.expenses.length;
+			//user.expenses.push({"id": id,"desc":req.body.desc,"price":req.body.price,"groupname":user.groups[groupid].name,"date":today});
+			for (var i = 0; i < user.groups.length; i++) {
+				if(user.groups[i]._id==groupid){
+					user.groups[i].bills.push({"desc":req.body.desc,"price":req.body.price,paid:false});
+			
+				}
+			};
 			console.log(user.groups);
 			query=user.groups;
 			user.save();
@@ -163,6 +168,7 @@ module.exports=function(app){
 		console.log("desc: "+ req.body.expenses.desc);
 		console.log("price: "+ req.body.expenses.price);
 		console.log("groupid: "+ req.body.expenses.groupid);
+		console.log(req.body);
 
 		var groupid = req.body.expenses.groupid;
 		var query;

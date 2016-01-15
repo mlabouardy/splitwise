@@ -1,5 +1,5 @@
 {
-  "name": "splitwise",
+  "name": "email-node",
   "version": "1.0.0",
   "description": "M2 Web project",
   "main": "index.js",
@@ -24,16 +24,11 @@
   "homepage": "https://github.com/mlabouardy/splitwise#readme",
   "dependencies": {
     "body-parser": "^1.14.2",
-    "express": "^4.13.3",
-    "express-session": "^1.12.1",
-    "mongoose": "^4.3.3",
+    "express": "~4.5.1",
+    "express-session": "^1.13.0",
+    "mongoose": "^4.3.5",
     "mongoose-unique-validator": "^0.6.2",
-    "validator": "^4.4.0"
-  },
-"name": "email-node",
-"version": "1.0.0",
-"dependencies": {
-"nodemailer": "~0.7.1",
-"express": "~4.5.1"
-}
+    "nodemailer": "~0.7.1",
+    "validator": "^4.5.0"
+  }
 }

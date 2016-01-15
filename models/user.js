@@ -15,6 +15,10 @@ var billSchema = mongoose.Schema({
     price:{
       type:Number,
       required:true
+    },
+    paid:{
+      type:Boolean,
+      required:true
     }
 });
 
@@ -47,7 +51,8 @@ var userSchema = mongoose.Schema({
          required:true
       },
       groups:[groupSchema],
-      friends:[mongoose.Schema.Types.Mixed]
+      friends:[mongoose.Schema.Types.Mixed],
+      repayments:[mongoose.Schema.Types.Mixed]
 });
 
 userSchema.plugin(uniqueValidator);

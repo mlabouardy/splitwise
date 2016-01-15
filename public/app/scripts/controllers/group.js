@@ -21,12 +21,20 @@ angular.module('publicApp')
           if(Array.isArray(id)){
             id=id[0];
           }
-          var groupCurrent = allGroups[id];
+           var groupCurrent;
+          for (var i = 0; i < allGroups.length; i++) {
+            if(allGroups[i]._id==id){
+              groupCurrent=allGroups[i];
+            }
+          };
           //console.dir(response.data[0].expenses);
           $scope.name=groupCurrent.name;
           $scope.hash=id;
           $scope.friends=response.data[0].friends;
-          $scope.bills=response.data[0].expenses;
+          $scope.friends.push({"id":-1,"email":"MOI"});
+         
+          console.dir(groupCurrent);
+          $scope.bills=groupCurrent.bills; //response.data[0].expenses;
           $scope.price=[];
           $scope.setDesc= function(bill) {
           $scope.desc=bill.desc;
@@ -64,7 +72,7 @@ angular.module('publicApp')
           }
         }
           $scope.newBill=function(){
-            $scope.groupbill.groupid=groupCurrent.id;
+            $scope.groupbill.groupid=groupCurrent._id;
             Authentication.newBill($scope.groupbill)
             .success(function(data){
              var temp= $scope.groupbill;
