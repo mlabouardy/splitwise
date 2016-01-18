@@ -1,4 +1,5 @@
 var User=require('./models/user.js');
+var Bill=require('./models/bill.js');
 var mongoose = require('mongoose');
 var express=require('express');
 var nodemailer = require("nodemailer");
@@ -99,7 +100,7 @@ module.exports=function(app){
 				}
 			};
 			console.log(user.groups);
-			query=user.groups;
+
 			user.save();
 
 		});
@@ -149,6 +150,7 @@ module.exports=function(app){
 		console.log("=== New Group ===");
 		console.log("sessiongroup: "+ req.body.session);
 		console.log("groupname: "+ req.body.name);
+		var friends;
 		//console.dir(req.body)
 		User.findOne({email : req.body.session},function (err,user){
 			if(err) throw err;
@@ -157,21 +159,59 @@ module.exports=function(app){
 				bills:[]
 			};
 			user.groups.push(group);
-			user.save();
+			friends=user.friends;
+			user.save(function(err){
+				if(err){throw err;}
+			});
+			for(var i in user.friends){
+				var friend=user.friends[i];
+				User.findOne({email: friend.email},function (err,tmpUser){
+					if (err) throw err;
+					if (tmpUser!=null) {
+
+								
+				var element = { name: req.body.name, bills: [] };
+				tmpUser.groups.pushIfNotExist(element, function(e) { 
+	    		return e.name === element.name; 
+				});
+						//tmpUser.groups.push({"name":req.body.name,
+						//"bills":[]});
+						tmpUser.save(function(err){
+							if(err){
+								console.log(err)
+								//res.send('{"success": false}');	
+							}
+							else{
+								console.log("new Friend");
+								console.log(tmpUser);
+							}
+						})
+					}
+				})
+				
+			}
+			console.log("_______ NEW GROUP OK _______");
 			res.send('{"success":true}');
 		});
+
 
 	});
 	app.post('/addRepayment', function (req, res) {
 		console.log("=== addRepayment ===");
-		console.log("sessiongroup: "+ req.body.session);
-		console.log("desc: "+ req.body.expenses.desc);
-		console.log("price: "+ req.body.expenses.price);
-		console.log("groupid: "+ req.body.expenses.groupid);
-		console.log(req.body);
+		console.log("user: "+ req.body.session);
+		console.log("bill_desc: "+ req.body.expenses.bill_desc);
+		console.log("bill_price: "+ req.body.expenses.bill_price);
+		console.log("group_name: "+ req.body.expenses.group_name);
+		console.log(req.body.details);
 
-		var groupid = req.body.expenses.groupid;
-		var query;
+		//get req parameter
+		var group_name = req.body.expenses.group_name;
+		var bill_desc = req.body.expenses.bill_desc;
+		var bill_price = req.body.expenses.bill_price;
+		var end = false;
+
+
+
 		var now = new Date(Date.now());
 		var dd = now.getDate();
 		var mm = now.getMonth()+1; //January is 0!
@@ -184,18 +224,82 @@ module.exports=function(app){
 			mm='0'+mm
 		}
 		var today = dd+'/'+mm+'/'+yyyy;
+
 		User.findOne({email : req.body.session},function (err,user){
 			if(err) throw err;
 			var id= user.repayments.length;
-			user.repayments.push({"id": id,"desc":req.body.desc,"expenses":req.body.expenses,"date":today});
-			console.log(user.repayments);
-			user.save();
+			//user.repayments.push({"id": id,"desc":req.body.desc,"expenses":req.body.expenses,"date":today});
+			var bill = new Bill();
+			bill.group_name = group_name;
+			bill.bill_desc = bill_desc;
+			bill.bill_price = bill_price;
+			bill.details = req.body.details;
+			bill.autor_email = req.body.session;
+			console.log("new bill");
+			console.log(bill);
+			//bill.save();
 
+			for(var i in bill.details){
+				var friend = bill.details[i].friend;
+				//friend
+				if (undefined !=friend || friend !=null) {
+				if(friend.email!=bill.autor_email){
+					//add bill of each friend
+					User.findOne({email : friend.email},function (err,userFriend){
+					if(err) throw err;
+					//var id= user.expenses.length;
+					//user.expenses.push({"id": id,"desc":req.body.desc,"price":req.body.price,"groupname":user.groups[groupid].name,"date":today});
+					if(userFriend!=null){
+						for (var i = 0; i < userFriend.groups.length; i++) {
+							if(userFriend.groups[i].name==group_name){
+								var element = {"desc":bill_desc,"price":bill_price,paid:false};
+								userFriend.groups[i].bills.pushIfNotExist(element, function(e) { 
+	    							return e.desc === element.desc; 
+								});
+								userFriend.save();
+								console.log("ok for my friends");
+								end=true;
+								console.log("----------------!End addRepayment !");
+								//res.send('{"success":true}');
+								//push({"desc":bill_desc,"price":bill_price,paid:false});
+							}
+						}
+					};
+					});
+				}
+				}
+			}
+		//User.findOneAndUpdate({ email : req.body.session }, {groups: query});
+		//console.log(query);
+		//res.send('{"success":true}');
+
+				
+			
+			user.repayments.push(bill);
+			user.save();
+			bill.save(function(err){
+			if(err){
+				console.log(err)
+				var errorMessages = []
+				for (field in err.errors) {
+					console.log(err.errors[field].message)
+		            errorMessages.push(err.errors[field].message) 
+		        }
+		        console.log("error from mboutoucou")
+		        res.status(500).send(err.errmsg)
+			}
+			else{
+				if(end){
+					res.send('{"success":true}')
+				}
+			}
+		})
 		});
+		
 	});
 
 	app.post('/removeGroup', function (req, res) {
-		console.log("=== addGroup ===");
+		console.log("=== remove Group ===");
 		console.log("sessiongroup: "+ req.body.session);
 		console.log("groupname: "+ req.body.name);
 		//console.dir(req.body)
@@ -224,6 +328,7 @@ module.exports=function(app){
 				for (field in err.errors) {
 					errorMessages.push(err.errors[field].message)
 				}
+				console.log(errorMessages)
 				res.status(500).send(errorMessages)
 			}
 			else{
@@ -276,19 +381,48 @@ module.exports=function(app){
 		res.status(200).send('/')
 	})
 
+	app.get('/bill/:desc',function(req,res){
+		console.log("=== bill ===")
+		var query=Bill.find(null);
+		var bill_desc= req.params.desc.split(":")[1];
+		console.log(bill_desc)
+		query.where('bill_desc',bill_desc);
+		
+		query.exec(function (err, data) {
+  			if (err) { throw err; }
+  			console.log(data);
+  			res.json(data);
 
+		console.log("-------- ! End getBill ! -------\n");
+		});
+	});
 	app.get('/user/:session',function(req,res){
-		console.log("=== groups ===")
+		console.log("=== user session ===")
 		var query=User.find(null);
 		var session= req.params.session.split(":")[1];
 		console.log(session)
 		query.where('email',session);
-
+		
 		query.exec(function (err, data) {
-			if (err) { throw err; }
-			console.log(data);
-			res.json(data);
-		});
+  			if (err) { throw err; }
+  			console.log(data);
+  			res.json(data);
 
+		console.log("-------- ! End getUser ! -------\n");
+		});
 	});
 }
+Array.prototype.inArray = function(comparer) { 
+	    for(var i=0; i < this.length; i++) { 
+	        if(comparer(this[i])) return true; 
+	    }
+	    return false; 
+	}; 
+
+	// adds an element to the array if it does not already exist using a comparer 
+	// function
+Array.prototype.pushIfNotExist = function(element, comparer) { 
+	    if (!this.inArray(comparer)) {
+	        this.push(element);
+	    }
+	}; 

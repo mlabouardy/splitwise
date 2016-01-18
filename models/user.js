@@ -25,7 +25,7 @@ var billSchema = mongoose.Schema({
 var groupSchema = mongoose.Schema({
     name:{
       type:String,
-      required:true
+      required:false,
     },
     bills:[billSchema]
 });

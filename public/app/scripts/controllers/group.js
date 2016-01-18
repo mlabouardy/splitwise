@@ -13,6 +13,7 @@ angular.module('publicApp')
       var url = $location.url();
       var allGroups;
       //console.dir(url);
+
       Authentication.getUser()
         .then(function successCallback(response) {
           allGroups=response.data[0].groups;
@@ -31,35 +32,63 @@ angular.module('publicApp')
           $scope.name=groupCurrent.name;
           $scope.hash=id;
           $scope.friends=response.data[0].friends;
-          $scope.friends.push({"id":-1,"email":"MOI"});
-         
-          console.dir(groupCurrent);
+          $scope.friends.push({"id":-1,"email":response.data[0].email});
+          
+
+
+          //console.dir(groupCurrent);
           $scope.bills=groupCurrent.bills; //response.data[0].expenses;
           $scope.price=[];
           $scope.setDesc= function(bill) {
-          $scope.desc=bill.desc;
+          $scope.desc=bill.desc; 
           $scope.total=bill.price;
+
+          Authentication.getBill(bill.desc)
+          .then(function successCallback(response){
+            console.dir(response.data[0].details);
+            var repayments = response.data[0].details;
+            for (var i in repayments) {
+              console.dir(repayments[i]);
+              for (var j = 0; j < $scope.friends.length; j++) {
+                if(repayments[i].friend.email == $scope.friends[j].email){
+                  $scope.friends[j].cash = repayments[i].cash;
+                }
+              }
+
+            }
+            console.dir($scope.friends);
+          
+          });
           //}
           $scope.splitBill= function(){
-            console.dir($scope.price);
+            //console.dir($scope.price);
             var tot=0;
             var rpmt={};
-            rpmt.desc=[];
+            rpmt.details=[];
+            rpmt.expenses={};
+
             for (var i = 0; i < $scope.price.length; i++) {
               if (!isNaN(parseInt($scope.price[i]))) {
               tot+=parseInt($scope.price[i]);
-              rpmt.desc.push({"friend":$scope.friends[i],
+              rpmt.details.push({"friend":$scope.friends[i],
                               "cash":$scope.price[i]});
 
-              };
+              }
+              else{
+                rpmt.details.push({"friend":$scope.friends[i],
+                              "cash":"0"});
+
+              }
 
             };
-            if(tot==$scope.total){
+            if(tot<$scope.total){
+            rpmt.expenses.group_name=groupCurrent.name;
+            rpmt.expenses.bill_desc=bill.desc;
+            rpmt.expenses.bill_price=bill.price;
 
-            rpmt.expenses=bill;
             Authentication.newRepayment(rpmt)
             .success(function(data){
-            toastr.success('newRepayment created!', 'Splitwise');
+            toastr.info('Send bill to your friends', 'Splitwise');
             })
             .error(function(data){
             toastr.error(data, ' add repayment  failed');
@@ -67,7 +96,7 @@ angular.module('publicApp')
               toastr.success('Good !', 'Splitwise');
            }
             else{
-              toastr.error('total not OK');
+              toastr.error('You pay too much');
             }
           }
         }

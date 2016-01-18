@@ -44,6 +44,9 @@ angular.module('publicApp')
             data.session=session;
             return $http.post(API_URL+'/addFriend',data);
         },
+        getBill:function(bill_desc){
+            return $http.get(API_URL+'/bill/:'+bill_desc);
+        },
         getUser:function(){
             return $http.get(API_URL+'/user/:'+session);
         },

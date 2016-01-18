@@ -21,9 +21,8 @@ angular.module('publicApp')
 
               $scope.bills.push(bill[j]);
             };
-            console.dir($scope.bills);
           };
-          /*$scope.bills=response.data[0].expenses;
+          //$scope.bills=response.data[0].expenses;
           var url=$location.url().split("/");
           var id=url[1].split("#");
           if(Array.isArray(id)){
@@ -42,7 +41,7 @@ angular.module('publicApp')
               toastr.error(data, 'remove Bill failed');
               });
             }
-          }*/
+          }
 
   			});
 	    }else{
