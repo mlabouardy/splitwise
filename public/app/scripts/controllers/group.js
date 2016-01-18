@@ -75,8 +75,9 @@ angular.module('publicApp')
 
               }
               else{
+                tot+=parseInt($scope.friends[i].cash);
                 rpmt.details.push({"friend":$scope.friends[i],
-                              "cash":"0"});
+                              "cash":$scope.friends[i].cash});
 
               }
 
