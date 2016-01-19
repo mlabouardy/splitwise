@@ -1,27 +1,27 @@
-var express=require('express');
-var session = require('express-session');
-var mongoose=require('mongoose');
-var bodyParser = require('body-parser');
-var constants=require('./constants');
-var port=3000;
+var express=require('express'),
+	session = require('express-session'),
+    mongoose=require('mongoose'),
+    bodyParser = require('body-parser'),
+    path= require('path'),
+    constants=require('./constants'),
+    api=require('./api'),
+    app=express();
 
-var app=express();
+app.set('port',3000);
 
 mongoose.connect(constants.DATABASE_HOST);
 
-app.use(session({secret: 'alzej6a4dae846a21azr8zeg894da',
-				 saveUninitialized: true,
-				 resave: true}));
-app.use(bodyParser.urlencoded({ extended: true }));
+var config={
+	secret: 'alzej6a4dae846a21azr8zeg894da',
+	saveUninitialized: true,
+	resave: true
+};
+
+app.use(session(config));
 app.use(bodyParser.json())
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
+app.use(express.static(path.join(__dirname, 'public')));
+api(app);
 
-require('./api')(app);
-
-app.listen(port, function(){
-	console.log('Listening to port '+port);
+app.listen(app.get('port'), function(){
+	console.log('Listening to port '+app.get('port'));
 });

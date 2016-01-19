@@ -1,0 +1,41 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-6">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					Start a new group
+				</div>
+				<div class="panel-body">
+					<div class="form-group">
+						<label>My group shall be called...</label>
+						<input type="text" ng-model="groupname" class="form-control"/>
+					</div>
+					<input type="submit" class="btn btn-success custom-btn" value="Save" ng-click="newGroup()"/>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					Invite a friend
+					<a class="btn btn-danger btn-xs pull-right" ng-click="refresh()"><i class="fa fa-refresh"></i> Refresh</a>
+				</div>
+				<div class="panel-body">
+					<div class="form-group">
+						<label>Email</label>
+						<input type="text" ng-model="email" class="form-control"/>
+					</div>
+					<div class="form-group">
+						<label>Groups</label>
+						<select ng-model="group" class="form-control">
+							<option ng-repeat="group in groups" value="{{group._id}}">{{group.name}}</option>
+						</select>
+					</div>
+					<div>
+						<button type="button" class="btn btn-success custom-btn" ng-click="send()">Send</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -2,34 +2,6 @@ var mongoose = require('mongoose');
 var uniqueValidator = require('mongoose-unique-validator');
 var validator = require('validator');
 
-var billSchema = mongoose.Schema({
-    desc:{
-      type:String,
-      required:true,
-    },
-    date:{
-      type: Date,
-      default: Date.now,
-      required:true
-    },
-    price:{
-      type:Number,
-      required:true
-    },
-    paid:{
-      type:Boolean,
-      required:true
-    }
-});
-
-var groupSchema = mongoose.Schema({
-    name:{
-      type:String,
-      required:false,
-    },
-    bills:[billSchema]
-});
-
 var userSchema = mongoose.Schema({
       email:{
          type:String,
@@ -50,9 +22,7 @@ var userSchema = mongoose.Schema({
          type:String,
          required:true
       },
-      groups:[groupSchema],
-      friends:[mongoose.Schema.Types.Mixed],
-      repayments:[mongoose.Schema.Types.Mixed]
+      friends:[mongoose.Schema.Types.ObjectId]
 });
 
 userSchema.plugin(uniqueValidator);

@@ -1,0 +1,218 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<i class="fa fa-users"></i>
+					<span ng-bind="group.name"></span>
+					<div class="button-group pull-right" ng-model="hash">
+						<a  id="modal" role="button" class="btn btn-success btn-xs" data-target="#addBill" data-toggle="modal"><i class="fa fa-cart-plus"></i> Add a bill</a>
+						<a id="modal" role="button" ng-click="refreshSettleUp()" class="btn btn-success custom-btn btn-xs" data-target="#settleUp" data-toggle="modal"><i class="fa fa-credit-card-alt"></i> Settle up</a>
+					</div>
+				</div>
+				<div class="panel-body">
+					<table class="table table-bordered table-hover">
+						<thead>
+							<tr class="active">
+								<th>Date</th>
+								<th>Description</th>
+								<th>Price</th>
+								<th>Option</th>
+							</tr>
+						</thead>
+						<tbody class="list-bill">
+							<tr class="list-bill-item" ng-repeat="bill in bills |filter:name">
+								<th>{{bill.date | date:"MM/dd/yyyy 'at' h:mma"}}</th>
+								<th>{{bill.description}}</th>
+								<th>{{bill.price}} €</th>
+								<th>
+									<a class="btn btn-danger btn-xs" ng-click="deleteBill(bill._id)"><i class="fa fa-trash"></i> Delete<span ng-show="bill.paid"> / Already paid</span></a>
+									
+								</th>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					Group users
+				</div>
+				<div class="panel-body">
+					<table class="table table-bordered table-hover">
+						<thead>
+							<tr class="active">
+								<th>First name</th>
+								<th>Last name</th>
+								<th>Option</th>
+							</tr>
+						</thead>
+						<tbody class="list-bill">
+							<tr class="list-bill-item" ng-repeat="user in group.users">
+								<th>{{user.firstName}}</th>
+								<th>{{user.lastName}}</th>
+								<th>
+									<a class="btn btn-danger btn-xs" ng-click="delete(user._id)"><i class="fa fa-trash"></i> Delete</a>
+								</th>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-3">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					Whiteboards
+					<div class="button-group pull-right">
+					</div>
+				</div>
+				<div class="panel-body">
+					<canvas id="myChart" style="margin: 0 auto"></canvas>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					Upcoming Bills
+					<div class="button-group pull-right">
+					</div>
+				</div>
+				<div class="panel-body">
+					<table class="table table-bordered table-hover">
+						<thead>
+							<tr class="active">
+								<th>Date</th>
+								<th>Description</th>
+								<th>Price</th>
+							</tr>
+						</thead>
+						<tbody class="list-bill">
+							<tr class="list-bill-item" ng-repeat="bill in upComingBills |filter:name">
+								<th>{{bill.date | date:"MM/dd/yyyy 'at' h:mma"}}</th>
+								<th>{{bill.description}}</th>
+								<th>{{bill.price}} €</th>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					Group Settings
+					<div class="button-group pull-right">
+					</div>
+				</div>
+				<div class="panel-body">
+					<div class="form-group">
+						<label>Rename:</label>
+						<input type="text" class="form-control" ng-model="name"/>
+					</div>
+					<input type="submit" class="btn btn-success btn-block" value="Update" ng-click="rename()"/>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="addBill" class="modal"  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><i class="fa fa-cart-plus"></i> Create a bill
+			</div>
+			<div class="modal-body">
+				<div class="center-div" >
+					<h4 class="text-primary">Splitwise helps you track expenses and IOUs with your friends.</h4>
+					<br/>
+				</div>
+					<div class="form-group">
+						<label class="text-primary" for="description">Description</label>
+							<input id="description" type="text" class="form-control" placeholder="description" ng-model="currentBill.description">
+					</div>
+					<div class="form-group">
+							<label class="text-primary" for="price">Price</label>
+							<input id="price" type="text" class="form-control" placeholder="0.00" ng-model="currentBill.price">
+					</div>
+					<div class="form-group">
+							<label class="text-primary" for="date">Date</label>
+							<input id="date" type="date" class="form-control" ng-model="currentBill.date"/>
+					</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button>
+				<input type="submit" data-dismiss="modal" aria-hidden="true" class="btn btn-success custom-btn" value="Save" ng-click="newBill()"/>
+			</div>
+		</div>
+		
+	</div>
+</div>
+<div id="settleUp" class="modal"  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><i class="fa fa-credit-card"></i> Settle Up
+			</div>
+			<div class="modal-body">
+				<div class="center-div" >
+					<div class="panel-body">
+						<table class="table table-bordered table-hover">
+							<thead>
+								<tr class="active">
+									<th>Date</th>
+									<th>Description</th>
+									<th>Price</th>
+									<th>Share</th>
+								</tr>
+							</thead>
+							<tbody for="singleSelect"  ng-model="desc"class="" ng-repeat="bill in bills">
+								
+								<tr>
+									<th>{{bill.date | date:"MM/dd/yyyy 'at' h:mma"}}</th>
+									<th>{{bill.description}}</th>
+									<th>{{bill.price}} €</th>
+									<th>
+										<button ng-hide="bill.paid" ng-click="friendList(bill)" id="myId" class="btn btn-success custom-btn btn-xs" type="button">
+										<i type="button" class="fa fa-money" data-toggle="tooltip" data-placement="left"></i>
+										</button>
+										<span ng-show="bill.paid">Already paid</span>
+									</th>
+									<div ng-show="settleup.show" id="paid">
+										<div class="panel panel-primary">
+											<div class="panel-heading">
+												<i class="fa fa-money"></i>
+												{{settleup.bill.description}} : {{settleup.bill.price}} €
+											</div>
+											<div class="panel-body">
+												<div class="list-group" ng-repeat="friend in settleup.friends">
+													<div class="input-group">
+														<span class="input-group-addon"><i class="fa fa-user"></i> {{friend.email}}</span>
+														<input class="form-control" ng-model="friend.price" type="text" ng-readonly="friend.readonly">
+													</div>
+												</div>
+												<input type="button" class="btn btn-success custom-btn btn-block" class="close" data-dismiss="modal" aria-hidden="true" value="Save" ng-click="updateCurrentBill()"/>
+											</div>
+										</div>
+										
+									</div>
+								</tr>
+								
+							</tbody>
+						</table>
+					</div>
+					<br/><br/>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

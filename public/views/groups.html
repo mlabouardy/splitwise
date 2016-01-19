@@ -1,0 +1,24 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					List of groups
+				</div>
+				<div class="panel-body">
+					<ul class="list-group" ng-repeat="group in groups">
+
+						<li class="list-group-item">
+							<i class="fa fa-users"></i>
+							 <span>{{group.name}}</span>
+							 <div class="button-group pull-right">
+								 <a class="btn btn-danger btn-xs" ng-click="delete(group._id)"><i class="fa fa-trash"></i> Delete</a>
+								 	 <a class="btn btn-success btn-xs" ng-href="#/group/{{group._id}}"><i class="fa fa-folder-open-o"></i> View</a>
+							 </div>
+						 </li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

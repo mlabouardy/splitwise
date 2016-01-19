@@ -1,322 +1,565 @@
-var User=require('./models/user.js');
-var Bill=require('./models/bill.js');
+var User = require('./models/user.js');
+var Group = require('./models/group.js');
+var Bill = require('./models/bill.js');
 var mongoose = require('mongoose');
-var express=require('express');
-var nodemailer = require("nodemailer");
-var app=express();
-/*
-Here we are configuring our SMTP Server details.
-STMP is mail server which is responsible for sending and recieving email.
-*/
-var smtpTransport = nodemailer.createTransport("SMTP",{
-	service: "Gmail",
-	auth: {
-		user: "totodukamer@gmail.com",
-		pass: "abcDEF123456"
-	}
-});
+var express = require('express');
+var app = express();
 
-module.exports=function(app){
-	app.get('/',function(req,res){
-		console.log("=== / ===");
-		res.sendfile('public/friends_invite.html');
-	});
-	app.get('/send',function(req,res){
-		console.log("=== sent ===");
-		var mailOptions={
-			to : req.query.to,
-			subject : req.query.subject,
-			text : req.query.text
-		}
-		console.log(mailOptions);
-		smtpTransport.sendMail(mailOptions, function(error, response){
-			if(error){
-				console.log(error);
-				res.end("error");
-			}else{
-				console.log("Message sent: " + response.message);
-				res.end("sent");
-			}
-		});
-	});
-	app.post('/profile', function (req, res) {
-		console.log("=== profile ===");
-		console.log("session: "+ req.body.session);
-		console.log("name: "+ req.body.firstname);
-		//console.dir(req.body)
-		User.findOne({email : req.body.session},function (err,user){
-			if(err) throw err;
-			user.email = req.body.email
-			user.password = req.body.password
-			user.firstName = req.body.firstName
-			user.lastName = req.body.lastName
-			user.save();
-			res.send('{"success":true}');
-		});
-
-	});
-	app.post('/updateExpenses', function (req, res) {
+module.exports = function(app) {
+	app.post('/updateExpenses', function(req, res) {
 		console.log("=== Expenses ===");
-		console.log("session: "+ req.body.session);
+		console.log("session: " + req.body.session);
 		console.log(req.body);
 		//console.dir(req.body)
-		User.findOne({email : req.body.session},function (err,user){
-			if(err) throw err;
+		User.findOne({
+			email: req.body.session
+		}, function(err, user) {
+			if (err) throw err;
 			user.expenses = req.body.expenses;
 			user.save();
 			res.send('{"success":true}');
 		});
 
 	});
-	app.post('/addBill', function (req, res) {
-		console.log("=== addBill ===");
-		console.log("sessiongroup: "+ req.body.session);
-		console.log("desc: "+ req.body.desc);
-		console.log("price: "+ req.body.price);
-		console.log("groupid: "+ req.body.groupid);
 
-		var groupid = req.body.groupid;
-		var now = new Date(Date.now());
-		var dd = now.getDate();
-		var mm = now.getMonth()+1; //January is 0!
+	app.get('/profile/:email',function(req,res){
+		var email = req.params.email;
+		console.log("=== Get Profile ===");
+		console.log("Profile: " + email);
 
-		var yyyy = now.getFullYear();
-		if(dd<10){
-			dd='0'+dd
-		}
-		if(mm<10){
-			mm='0'+mm
-		}
-		var today = dd+'/'+mm+'/'+yyyy;
-		User.findOne({email : req.body.session},function (err,user){
-			if(err) throw err;
-			//var id= user.expenses.length;
-			//user.expenses.push({"id": id,"desc":req.body.desc,"price":req.body.price,"groupname":user.groups[groupid].name,"date":today});
-			for (var i = 0; i < user.groups.length; i++) {
-				if(user.groups[i]._id==groupid){
-					user.groups[i].bills.push({"desc":req.body.desc,"price":req.body.price,paid:false});
-			
-				}
-			};
-			console.log(user.groups);
-
-			user.save();
-
+		User.findOne({email: email},'firstName lastName email', function(err, user) {
+			if(err)
+				throw err;
+			res.send(user);
 		});
-		//User.findOneAndUpdate({ email : req.body.session }, {groups: query});
-		//console.log(query);
-		res.send('{"success":true}');
-
-	});
-	app.post('/addFriend', function (req, res) {
-		console.log("=== New Friend ===");
-		console.log("Current session: "+ req.body.session);
-		console.log("Friend email: "+ req.body.email);
-		User.findOne({email : req.body.email},'firstName lastName email friends',function (err,friend){
-			if(err) throw err;
-			if(friend==null){
-					res.send('{"success":false}');
-			}else{
-					User.findOne({email : req.body.session},'firstName lastName email friends',function (err,user){
-						var tmpFriend={
-							 _id:friend._id,
-							 firstName:friend.firstName,
-							 lastName:friend.lastName,
-							 email:friend.email
-						};
-						
-						user.friends.push(tmpFriend);
-						user.save();
-
-						var tmpUser={
-							_id:user._id,
-							firstName:user.firstName,
-							lastName:user.lastName,
-							email:user.email
-						}
-
-						friend.friends.push(tmpUser);
-						friend.save();
-
-						res.send('{"success":true}');
-					});
-			}
-		});
-
 	});
 
-	app.post('/addGroup', function (req, res) {
-		console.log("=== New Group ===");
-		console.log("sessiongroup: "+ req.body.session);
-		console.log("groupname: "+ req.body.name);
-		var friends;
-		//console.dir(req.body)
-		User.findOne({email : req.body.session},function (err,user){
-			if(err) throw err;
-			var group={
-				name:req.body.name,
-				bills:[]
-			};
-			user.groups.push(group);
-			friends=user.friends;
-			user.save(function(err){
-				if(err){throw err;}
+	app.put('/profile',function(req,res){
+		var email = req.body.email;
+		console.log("=== Update Profile ===");
+		console.log("Profile: " + email);
+		User.findOne({email: email}, function(err, user) {
+			user.firstName=req.body.firstName;
+			user.lastName=req.body.lastName;
+			user.password=req.body.password;
+			user.save(function(){
+				res.status(200).send();
 			});
-			for(var i in user.friends){
-				var friend=user.friends[i];
-				User.findOne({email: friend.email},function (err,tmpUser){
-					if (err) throw err;
-					if (tmpUser!=null) {
+			
+		});
+	});
 
-								
-				var element = { name: req.body.name, bills: [] };
-				tmpUser.groups.pushIfNotExist(element, function(e) { 
-	    		return e.name === element.name; 
+	app.get('/groups/:email', function(req, res) {
+		var email = req.params.email;
+		console.log("=== Get groups ===");
+		console.log("Session: " + email);
+
+		User.findOne({
+			email: email
+		}, function(err, user) {
+			Group.find({
+				$or: [{
+					owner: user._id
+				}, {
+					users: user._id
+				}]
+			}, function(err, groups) {
+				if (err)
+					throw err;
+				res.send(groups);
+			});
+		});
+	});
+
+	//########################################################################################################################
+
+	app.post('/addBill', function(req, res) {
+		console.log("=== Add bill ===");
+
+		Group.findById(req.body.groupId, function(err, group) {
+
+			if (err) {
+				res.status(500).send();
+			} else {
+
+				var paid_list = [];
+
+				paid_list.push({
+					user: group.owner,
+					price: 0
 				});
-						//tmpUser.groups.push({"name":req.body.name,
-						//"bills":[]});
-						tmpUser.save(function(err){
-							if(err){
-								console.log(err)
-								//res.send('{"success": false}');	
-							}
-							else{
-								console.log("new Friend");
-								console.log(tmpUser);
-							}
-						})
+
+				group.users.forEach(function(_user) {
+					paid_list.push({
+						user: _user,
+						price: 0
+					});
+				});
+
+				group.bills.push({
+					"description": req.body.description,
+					"price": req.body.price,
+					"paid": false,
+					"paid_list": paid_list,
+					"date" : req.body.date
+				});
+
+				group.save(function(err) {
+					if (err) {
+						res.status(500).send();
+					} else {
+						res.status(200).send();
 					}
-				})
-				
+				});
 			}
-			console.log("_______ NEW GROUP OK _______");
-			res.send('{"success":true}');
+
 		});
 
-
 	});
-	app.post('/addRepayment', function (req, res) {
-		console.log("=== addRepayment ===");
-		console.log("user: "+ req.body.session);
-		console.log("bill_desc: "+ req.body.expenses.bill_desc);
-		console.log("bill_price: "+ req.body.expenses.bill_price);
-		console.log("group_name: "+ req.body.expenses.group_name);
-		console.log("bill_paid: "+ req.body.expenses.bill_paid);
-		console.log("bill_date: ");
-		console.log(req.body.details);
 
-		//get req parameter
-		var group_name = req.body.expenses.group_name;
-		var bill_desc = req.body.expenses.bill_desc;
-		var bill_price = req.body.expenses.bill_price;
-		var bill_paid = req.body.expenses.bill_paid;
-		var bill_details = req.body.details;
-		var bill_autor_email = req.body.session;
-		var end = false;
-		var update = null;
+	app.get('/getBillList/:email/:groupId', function(req, res) {
 
-		var bill=null;
+		console.log("=== Get all bill ===");
 
-		//set the date
-		var now = new Date(Date.now());
-		var dd = now.getDate();
-		var mm = now.getMonth()+1; //January is 0!
-		var yyyy = now.getFullYear();
-		if(dd<10){
-			dd='0'+dd
-		}
-		if(mm<10){
-			mm='0'+mm
-		}
-		var today = dd+'/'+mm+'/'+yyyy;
+		Group.findById(req.params.groupId, function(err, group) {
+			if (err) {
+				res.status(500).send();
+			} else {
+				res.status(200).send(group.bills);
+			}
+
+		});
+	});
+
+	app.delete('/deleteBill/:session/:groupId/:billId', function(req, res) {
+
+		console.log("=== remove bill ===");
+
+		Group.findById(req.params.groupId, function(err, group) {
+
+			if (err) {
+				res.status(500).send();
+			} else {
+
+				group.bills.id(req.params.billId).remove();
+
+				group.save(function(err) {
+					if (err) {
+						res.status(500).send();
+					} else {
+						res.status(200).send();
+					}
+				});
+
+			}
+
+		});
+	});
 
 
-		User.findOne({email : req.body.session},function (err,user){
-			if(err) throw err;
+	var getUsersDetailsByEmail = function(email, callback) {
+		User.findOne({
+			email: email
+		}, function(err, user) {
+			if (!err) callback(user);
+		});
+	}
 
-			//check if the bill also exist and update it 
-			//else create it 
-			Bill.findOne({bill_desc: bill_desc},function (err,billUpdate){
-				if(err) throw err;
-				update=false;
-				if (billUpdate!=null) {
-					billUpdate.details = req.body.details;
-					billUpdate.save();
-					update=true;
-				}
-				else{
-					//Create the Shared bill
-					bill = new Bill();
-					bill.group_name = group_name;
-					bill.bill_desc = bill_desc;
-					bill.bill_price = bill_price;
-					bill.details = bill_details;
-					bill.autor_email = bill_autor_email;
-					console.log("_____new bill");
-					console.log(bill);
-					console.log("____ _____");
-					bill.save();					
+	var getUsersDetailsByID = function(id, callback) {
+		User.findById(id, function(err, user) {
+			if (!err) callback(user);
+		});
+	}
 
-				}
+	app.get('/getUsersDetails/:email/:groupId/:billId', function(req, res) {
 
-			});
+		Group.findById(req.params.groupId, function(err, group) {
 
-			
-			//update friend's bill
-			for(var i in bill_details){
-				var friend = bill_details[i].friend;
-				//friend
-				if (undefined !=friend || friend !=null) {
-					//if(friend.email!=bill_autor_email){
-						//add bill of each friend
-						User.findOne({email : friend.email},function (err,userFriend){
-							if(err) throw err;
-							//var id= user.expenses.length;
-							//user.expenses.push({"id": id,"desc":req.body.desc,"price":req.body.price,"groupname":user.groups[groupid].name,"date":today});
-							if(userFriend!=null){
-								for (var i = 0; i < userFriend.groups.length; i++) {
-									if(userFriend.groups[i].name==group_name){
-										var element = {"desc":bill_desc,"price":bill_price,paid:bill_paid};
-										userFriend.groups[i].bills.pushIfNotExist(element, function(e) { 
-	    									return e.desc === element.desc; 
-										});
-										for (var j = 0; j < userFriend.groups[i].bills.length; j++) {
-											if(userFriend.groups[i].bills[j].desc== bill_desc){
-												userFriend.groups[i].bills[j].paid=bill_paid;
-											}
-										};
-										userFriend.save();
-										console.log("ok for my friends");
-										end=true;
-										//res.send('{"success":true}');
-										//push({"desc":bill_desc,"price":bill_price,paid:false});
+			if (err) {
+
+				res.status(500).send();
+
+			} else {
+
+				var result = [];
+
+
+
+				group.bills.forEach(function(bill) {
+
+					if (bill._id.equals(req.params.billId)) {
+
+						bill.paid_list.forEach(function(paid_list) {
+
+							getUsersDetailsByEmail(req.params.email, function(user) {
+
+								if (paid_list.user.equals(user._id)) {
+
+									result.push({
+										"_id": user._id,
+										"lastName": user.lastName,
+										"firstName": user.firstName,
+										"email": user.email,
+										"price": paid_list.price,
+										"readonly": false
+									});
+
+									if (bill.paid_list.length == result.length) {
+										res.status(200).send(result);
 									}
+
+								} else {
+
+									getUsersDetailsByID(paid_list.user, function(user) {
+
+										result.push({
+											"_id": user._id,
+											"lastName": user.lastName,
+											"firstName": user.firstName,
+											"email": user.email,
+											"price": paid_list.price,
+											"readonly": true
+										});
+
+										if (bill.paid_list.length == result.length) {
+											res.status(200).send(result);
+										}
+
+									});
+
 								}
 
-							};
-																
+							});
+
 						});
-					//}
-				}
-			}	
-			
-			user.save();
-			
+					}
+
+				});
+
+			}
 		});
-		console.log("----------------!End addRepayment !");	
-		res.send('{"success":true}');
-		
 	});
 
-	app.post('/removeGroup', function (req, res) {
-		console.log("=== remove Group ===");
-		console.log("sessiongroup: "+ req.body.session);
-		console.log("groupname: "+ req.body.name);
+
+	app.post('/updateCurrentBill', function(req, res) {
+
+		var groupId = req.body.groupId;
+		var billId = req.body.billId;
+		var friends = req.body.friends;
+
+		Group.findById(groupId, function(err, group) {
+
+			if (err) {
+
+				res.status(500).send();
+
+			} else {
+
+				group.bills.forEach(function(bill) {
+
+					if (bill._id.equals(billId)) {
+
+						var maxPrice = bill.price;
+
+						bill.paid_list.forEach(function(paid_list) {
+
+							friends.forEach(function(friend) {
+								if (paid_list.user.equals(friend._id)) {
+									paid_list.price = friend.price;
+									maxPrice -= friend.price;
+								}
+							});
+
+						});
+
+						if (maxPrice<0){
+							res.status(500).send("Price error !");
+						}
+						else{
+							if (maxPrice === 0){
+								bill.paid = true;
+							}
+							group.save();
+							res.status(200).send("Saved !");
+						}
+					}
+
+				});
+
+
+			}
+		});
+
+	});
+
+	//########################################################################################################################
+
+
+	app.delete('/friends/delete/:email/:id', function(req, res) {
+		var email = req.params.email;
+		var friendId = req.params.id;
+		console.log("=== Delete Friend ===");
+		console.log("Current session: " + email);
+		console.log("Friend Id: " + friendId);
+
+		User.findOne({
+			email: email
+		}, function(err, user) {
+			var index = user.friends.indexOf(friendId);
+			if (index > -1) {
+				user.friends.splice(index, 1);
+				user.save();
+			} else {
+				res.status(400).send();
+			}
+
+			User.findOne({
+				_id: friendId
+			}, function(err, friend) {
+				var index = friend.friends.indexOf(user._id);
+				if (index > -1) {
+					friend.friends.splice(index, 1);
+					friend.save();
+					res.status(200).send();
+				} else {
+					res.status(400).send();
+				}
+			});
+
+
+		});
+	});
+
+
+	app.delete('/groups/delete/:email/:id', function(req, res) {
+		var email = req.params.email;
+		var groupID = req.params.id;
+		console.log("=== Delete Group ===");
+		console.log("Current session: " + email);
+		console.log("Group Id: " + groupID);
+
+		Group.remove({
+			_id: groupID
+		}, function(err) {
+			if (err)
+				throw err;
+			res.status(200).send();
+		});
+	});
+
+	app.post('/groups/users/delete', function(req, res) {
+		var email = req.body.session;
+		var groupID = req.body.id_group;
+		var userID = req.body.id_user;
+		console.log("=== Remove user from group ===");
+		console.log("Current session: " + email);
+		console.log("Group Id: " + groupID);
+
+		Group.findById(groupID, function(err, group) {
+			console.log(group);
+			console.log(userID);
+			var index = group.users.indexOf(userID);
+			if (index > -1) {
+				group.users.splice(index, 1);
+				group.save();
+				res.status(200).send();
+			} else {
+				res.status(400).send();
+			}
+		});
+	});
+
+	app.post('/group/update', function(req, res) {
+		var email = req.body.session;
+		var groupID = req.body.id;
+		var name = req.body.name;
+		console.log("=== Update Group ===");
+		console.log("Current session: " + email);
+		console.log("Group Id: " + groupID);
+
+		Group.findById(groupID, function(err, group) {
+			console.log(group);
+			group.name = name;
+			group.save();
+			res.status(200).send();
+		});
+	});
+	app.get('/group/:email/:id', function(req, res) {
+		var email = req.params.email;
+		var groupID = req.params.id;
+		console.log("=== Group Information ===");
+		console.log("Current session: " + email);
+		console.log("Group Id: " + groupID);
+
+		Group.findOne({
+			_id: groupID
+		}, function(err, group) {
+			if (group.users.length > 0) {
+				User.find({
+					_id: {
+						$in: [group.users, group.owner]
+					}
+				}, 'firstName lastName email', function(err, data) {
+					if (err)
+						throw err;
+					console.log(data);
+					var tmp = {
+						_id: group._id,
+						bills: group.bills,
+						owner: group.owner,
+						name: group.name,
+						users: data
+					};
+					res.send(tmp);
+				});
+			} else {
+				var tmp = {
+					_id: group._id,
+					bills: group.bills,
+					owner: group.owner,
+					name: group.name,
+					users: []
+				};
+				res.send(tmp);
+			}
+
+		});
+	});
+
+	app.post('/addFriend', function(req, res) {
+		var email = req.body.session;
+		var groupID = req.body.group;
+		var friendEmail = req.body.friend;
+		console.log("=== New Friend ===");
+		console.log("Current session: " + email);
+		console.log("Friend email: " + friendEmail);
+		User.findOne({
+			email: friendEmail
+		}, function(err, friend) {
+			if (err) throw err;
+			if (friend == null) {
+				res.send('{"success":false}');
+			} else {
+				User.findOne({
+					email: email
+				}, function(err, user) {
+					user.friends.push(friend._id);
+					user.save();
+
+					friend.friends.push(user._id);
+					friend.save();
+
+					Group.findOne({
+						_id: groupID
+					}, function(err, group) {
+						group.users.push(friend._id);
+						group.save();
+						res.send('{"success":true}');
+					});
+				});
+			}
+		});
+
+	});
+
+	app.get('/friends/:email', function(req, res) {
+		var email = req.params.email;
+		console.log("=== List of Friends ===");
+		console.log("Session: " + email);
+
+		User.findOne({
+			email: email
+		}, 'friends', function(err, friends) {
+			User.find({
+				_id: {
+					$in: friends.friends
+				}
+			}, 'firstName lastName email', function(err, data) {
+				if (err)
+					throw err;
+				res.send(data);
+			});
+		});
+
+	});
+
+	app.post('/addGroup', function(req, res) {
+		console.log("=== New Group ===");
+		console.log("sessiongroup: " + req.body.session);
+		console.log("groupname: " + req.body.name);
 		//console.dir(req.body)
-		User.findOne({email : req.body.session},function (err,user){
-			if(err) throw err;
-			var id= user.groups.length
-			user.groups.push({"id":id, "name":req.body.name, "bills": [mongoose.Schema.Types.Mixed] });
+		User.findOne({
+			email: req.body.session
+		}, function(err, user) {
+			if (err) throw err;
+			var data = {
+				name: req.body.name,
+				owner: user._id,
+				bills: [],
+				users: []
+			};
+			var group = new Group(data);
+			group.save(function(err) {
+				if (err)
+					throw err;
+				res.send('{"success":true}');
+			});
+		});
+
+	});
+	app.post('/addRepayment', function(req, res) {
+		console.log("=== addRepayment ===");
+		console.log("sessiongroup: " + req.body.session);
+		console.log("desc: " + req.body.expenses.desc);
+		console.log("price: " + req.body.expenses.price);
+		console.log("groupid: " + req.body.expenses.groupid);
+
+		var groupid = req.body.expenses.groupid;
+		var query;
+		var now = new Date(Date.now());
+		var dd = now.getDate();
+		var mm = now.getMonth() + 1; //January is 0!
+
+		var yyyy = now.getFullYear();
+		if (dd < 10) {
+			dd = '0' + dd
+		}
+		if (mm < 10) {
+			mm = '0' + mm
+		}
+		var today = dd + '/' + mm + '/' + yyyy;
+		User.findOne({
+			email: req.body.session
+		}, function(err, user) {
+			if (err) throw err;
+			var id = user.repayments.length;
+			user.repayments.push({
+				"id": id,
+				"desc": req.body.desc,
+				"expenses": req.body.expenses,
+				"date": today
+			});
+			console.log(user.repayments);
+			user.save();
+
+		});
+	});
+
+	app.post('/removeGroup', function(req, res) {
+		console.log("=== addGroup ===");
+		console.log("sessiongroup: " + req.body.session);
+		console.log("groupname: " + req.body.name);
+		//console.dir(req.body)
+		User.findOne({
+			email: req.body.session
+		}, function(err, user) {
+			if (err) throw err;
+			var id = user.groups.length
+			user.groups.push({
+				"id": id,
+				"name": req.body.name,
+				"bills": [mongoose.Schema.Types.Mixed]
+			});
 			user.save();
 			res.send('{"success":true}');
 		});
@@ -324,7 +567,7 @@ module.exports=function(app){
 	});
 
 
-	app.post('/register',function (req,res){
+	app.post('/register', function(req, res) {
 		var user = new User()
 
 		user.email = req.body.email
@@ -332,35 +575,34 @@ module.exports=function(app){
 		user.firstName = req.body.firstName
 		user.lastName = req.body.lastName
 		//mail= user.email;
-		user.save(function(err){
-			if(err){
+		user.save(function(err) {
+			if (err) {
 				var errorMessages = []
 				for (field in err.errors) {
 					errorMessages.push(err.errors[field].message)
 				}
-				console.log(errorMessages)
 				res.status(500).send(errorMessages)
-			}
-			else{
+			} else {
 				res.send('{"success":true}')
 			}
 		})
 	})
 
 
-	app.post('/login', function (req, res) {
+	app.post('/login', function(req, res) {
 		console.log("==== login ===")
-		User.findOne({email : req.body.email},function (err,user){
+		User.findOne({
+			email: req.body.email
+		}, function(err, user) {
 
-			if (!user){
+			if (!user) {
 				res.status(500).send("Invalid email or password")
-			}
-			else{
-				if (req.body.password === user.password){
-					console.log("session: "+req.body.session)
+			} else {
+				if (req.body.password === user.password) {
+					console.log("session: " + req.body.session)
 					req.session.user = user
 					res.send('/board')
-				}else{
+				} else {
 					res.status(500).send("Invalid email or password")
 				}
 			}
@@ -368,71 +610,45 @@ module.exports=function(app){
 
 	})
 
-	app.get('/verify',function(req,res){
-		if (req.session && req.session.user){
-			User.findOne({email : req.session.user.email},function (err,user){
-				if (!user){
+	app.get('/verify', function(req, res) {
+		if (req.session && req.session.user) {
+			User.findOne({
+				email: req.session.user.email
+			}, function(err, user) {
+				if (!user) {
 					req.session.reset()
 					res.status(500).send()
-				}
-				else{
+				} else {
 					res.user = user
 					res.status(200).send()
 				}
 			})
-		}
-		else{
+		} else {
 			res.status(500).send()
 		}
 	});
 
-	app.get('/logout',function(req,res){
+	app.get('/logout', function(req, res) {
 		req.session.destroy()
 		res.status(200).send('/')
 	})
 
-	app.get('/bill/:desc',function(req,res){
-		console.log("=== bill ===")
-		var query=Bill.find(null);
-		var bill_desc= req.params.desc.split(":")[1];
-		console.log(bill_desc)
-		query.where('bill_desc',bill_desc);
-		
-		query.exec(function (err, data) {
-  			if (err) { throw err; }
-  			console.log(data);
-  			res.json(data);
 
-		console.log("-------- ! End getBill ! -------\n");
-		});
-	});
-	app.get('/user/:session',function(req,res){
-		console.log("=== user session ===")
-		var query=User.find(null);
-		var session= req.params.session.split(":")[1];
+	app.get('/user/:session', function(req, res) {
+		console.log("=== groups ===")
+		var query = User.find(null);
+		var session = req.params.session.split(":")[1];
 		console.log(session)
-		query.where('email',session);
-		
-		query.exec(function (err, data) {
-  			if (err) { throw err; }
-  			console.log(data);
-  			res.json(data);
+		query.where('email', session);
 
-		console.log("-------- ! End getUser ! -------\n");
+		query.exec(function(err, data) {
+			if (err) {
+				throw err;
+			}
+			console.log(data);
+			res.json(data);
 		});
-	});
-}
-Array.prototype.inArray = function(comparer) { 
-	    for(var i=0; i < this.length; i++) { 
-	        if(comparer(this[i])) return true; 
-	    }
-	    return false; 
-	}; 
 
-	// adds an element to the array if it does not already exist using a comparer 
-	// function
-Array.prototype.pushIfNotExist = function(element, comparer) { 
-	    if (!this.inArray(comparer)) {
-	        this.push(element);
-	    }
-	}; 
+	});
+
+}

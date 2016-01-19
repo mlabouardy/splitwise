@@ -1,0 +1,20 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					List of friends
+				</div>
+				<div class="panel-body">
+					<ul class="list-group" ng-repeat="friend in friends">
+						<li class="list-group-item">
+							<i class="fa fa-user"></i>
+							<span>{{friend.email}}</span>
+							<a class="btn btn-danger pull-right btn-xs" ng-click="delete(friend._id)"><i class="fa fa-trash"></i> Delete</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

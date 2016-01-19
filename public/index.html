@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" href="bower_components/toastr/toastr.css" />
+  <link rel="stylesheet" href="bower_components/bootstrap/bootstrap.min.css" >
+  <link rel="stylesheet" href="styles/style.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+</head>
+<body ng-app="publicApp">
+  <nav class="navbar navbar-default navbar-custom">
+    <div class="container-fluid customer-container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#/">SPLITWISE</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse" ng-controller="MenuCtrl">
+        <div ng-if="!isConnected()">
+          <ul class="nav navbar-nav navbar-right">
+            <li data-ng-class="{active: isActive('/login')}"><a href="#/login"><i class="fa fa-sign-in"></i> Login</a></li>
+            <li data-ng-class="{active: isActive('/sign-up')}"><a href="#/sign-up"><i class="fa fa-user-plus"></i> Sign up</a></li>
+          </ul>
+        </div>
+        <div ng-if="isConnected()">
+          <ul class="nav navbar-nav">
+            <li data-ng-class="{active: isActive('/dashboard')}"><a href="#/dashboard"><i class="fa fa-home"></i> Dashboard</a></li>
+            <li data-ng-class="{active: isActive('/groups')}"><a href="#/groups">Groups</a></li>
+            <li data-ng-class="{active: isActive('/friends')}"><a href="#/friends">Friends</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right" >
+            <li data-ng-class="{active: isActive('/profile')}"><a href="#/profile"><i class="fa fa-pencil fa-fw"></i> Profile </a></li>
+            <li data-ng-class="{active: isActive('/logout')}"><a href="#/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+          </ul>
+        </div>
+      </div><!--/.nav-collapse -->
+    </div><!--/.container-fluid -->
+  </nav>
+  
+  <div ng-view=""></div>
+  
+  <div ng-include src="'footer.html'"></div>
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap.js"></script>
+  <script src="bower_components/angular-route/angular-route.js"></script>
+  <script src="bower_components/angular-google-plus/dist/angular-google-plus.js"></script>
+  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <script src="bower_components/toastr/toastr.js"></script>
+  <script src="bower_components/Chart.js/Chart.js"></script>
+  <script src="scripts/constants.js"></script>
+  <script src="bower_components/bootstrap-filestyle/bootstrap-filestyle.min.js"></script>
+  <script src="scripts/app.js"></script>
+  <script src="scripts/controllers/menu.js"></script>
+  <script src="scripts/controllers/login.js"></script>
+  <script src="scripts/controllers/sign-up.js"></script>
+  <script src="scripts/controllers/profile.js"></script>
+  <script src="scripts/services/rest.js"></script>
+  <script src="scripts/controllers/logout.js"></script>
+  <script src="scripts/controllers/dashboard.js"></script>
+  <script src="scripts/controllers/friends.js"></script>
+  <script src="scripts/controllers/groups.js"></script>
+  <script src="scripts/controllers/group.js"></script>
+</body>
+</html>
