@@ -101,7 +101,9 @@
   <input ng-if="friend.id==-1" class="form-control" ng-model="price[$index]" type="text" placeholder="{{friend.cash}} €">
 </div>
 </div>
-<input type="button" class="btn btn-success custom-btn" class="close" data-dismiss="modal" aria-hidden="true" value="Save" ng-click="splitBill()"/>	
+<input ng-if="!paid" type="button" class="btn btn-success custom-btn" class="close" data-dismiss="modal" aria-hidden="true" value="Save" ng-click="splitBill()"/>
+
+<input ng-if="paid" type="button" class="btn btn-success custom-btn" class="close" data-dismiss="modal" aria-hidden="true" value="THIS BILL IS PAID"/>	
 </div>
 </div>
 </div>

@@ -12,7 +12,7 @@ angular.module('publicApp')
     if(Authentication.isConnected()){
       var url = $location.url();
       var allGroups;
-      //console.dir(url);
+      
 
       Authentication.getUser()
         .then(function successCallback(response) {
@@ -28,24 +28,23 @@ angular.module('publicApp')
               groupCurrent=allGroups[i];
             }
           };
-          //console.dir(response.data[0].expenses);
           $scope.name=groupCurrent.name;
           $scope.hash=id;
           $scope.friends=response.data[0].friends;
           $scope.friends.push({"id":-1,"email":response.data[0].email});
+          $scope.paid=false;
+
+
           
-
-
-          //console.dir(groupCurrent);
-          $scope.bills=groupCurrent.bills; //response.data[0].expenses;
+          $scope.bills=groupCurrent.bills; 
           $scope.price=[];
           $scope.setDesc= function(bill) {
           $scope.desc=bill.desc; 
           $scope.total=bill.price;
+          $scope.paid=bill.paid;
 
           Authentication.getBill(bill.desc)
           .then(function successCallback(response){
-            console.dir(response);
             if(response.data[0]!=undefined){
             var repayments = response.data[0].details;
             for (var i in repayments) {
@@ -66,12 +65,10 @@ angular.module('publicApp')
               }
 
             }
-            console.dir($scope.friends);
           
           });
-          //}
+
           $scope.splitBill= function(){
-            //console.dir($scope.price);
             var tot=0;
             var rpmt={};
             rpmt.details=[];
@@ -148,16 +145,14 @@ angular.module('publicApp')
              var today = dd+'/'+mm+'/'+yyyy;
              temp.date=today;
              $scope.bills.push(temp);
-            // $location.path(url);
             toastr.success('Bill successfuly created!', 'Splitwise');
             })
             .error(function(data){
             toastr.error(data, 'Add Bill failed');
         });
-            //console.dir($scope.bills);
       }
 
-        });
+    });
 
 
 
@@ -169,7 +164,8 @@ angular.module('publicApp')
             { title: "Whiteboards", content:"main.tab3"},
             { title: "Settings", content:"main.tab3"}
         ];
-    }else{
+    }
+    else{
       $location.path('/');
     }
   });
