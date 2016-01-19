@@ -9,7 +9,7 @@ var express=require('express'),
 
 app.set('port',3000);
 
-mongoose.connect(constants.DATABASE_HOST);
+mongoose.connect(constants.DATABASE_HOST2);
 
 var config={
 	secret: 'alzej6a4dae846a21azr8zeg894da',

@@ -1,4 +1,4 @@
 
 module.exports={
-	'DATABASE_HOST':'mongodb://localhost/test4'
+	'DATABASE_HOST':'mongodb://localhost/mlabouardy_splitewise'
 }

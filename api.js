@@ -3,6 +3,7 @@ var Group = require('./models/group.js');
 var Bill = require('./models/bill.js');
 var mongoose = require('mongoose');
 var express = require('express');
+var md5=require('md5');
 var app = express();
 
 module.exports = function(app) {
@@ -571,7 +572,7 @@ module.exports = function(app) {
 		var user = new User()
 
 		user.email = req.body.email
-		user.password = req.body.password
+		user.password = md5(req.body.password)
 		user.firstName = req.body.firstName
 		user.lastName = req.body.lastName
 		//mail= user.email;
@@ -598,7 +599,7 @@ module.exports = function(app) {
 			if (!user) {
 				res.status(500).send("Invalid email or password")
 			} else {
-				if (req.body.password === user.password) {
+				if (md5(req.body.password) === user.password) {
 					console.log("session: " + req.body.session)
 					req.session.user = user
 					res.send('/board')
