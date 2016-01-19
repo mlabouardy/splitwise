@@ -45,7 +45,8 @@ angular.module('publicApp')
 
           Authentication.getBill(bill.desc)
           .then(function successCallback(response){
-            console.dir(response.data[0].details);
+            console.dir(response);
+            if(response.data[0]!=undefined){
             var repayments = response.data[0].details;
             for (var i in repayments) {
               console.dir(repayments[i]);
@@ -53,6 +54,15 @@ angular.module('publicApp')
                 if(repayments[i].friend.email == $scope.friends[j].email){
                   $scope.friends[j].cash = repayments[i].cash;
                 }
+              }
+
+            }
+            }
+            else{
+              for (var j = 0; j < $scope.friends.length; j++) {
+                
+                 $scope.friends[j].cash = 0;
+                
               }
 
             }
@@ -66,27 +76,42 @@ angular.module('publicApp')
             var rpmt={};
             rpmt.details=[];
             rpmt.expenses={};
-
+            console.log("price");
+            console.dir($scope.price)
             for (var i = 0; i < $scope.price.length; i++) {
               if (!isNaN(parseInt($scope.price[i]))) {
               tot+=parseInt($scope.price[i]);
+
+              $scope.friends[i].cash=$scope.price[i];
               rpmt.details.push({"friend":$scope.friends[i],
                               "cash":$scope.price[i]});
 
               }
               else{
-                tot+=parseInt($scope.friends[i].cash);
-                rpmt.details.push({"friend":$scope.friends[i],
+
+                $scope.price[i]=$scope.friends[i].cash;
+                if (!isNaN(parseInt($scope.friends[i].cash))){
+                  tot+=parseInt($scope.friends[i].cash);
+                }  
+                  rpmt.details.push({"friend":$scope.friends[i],
                               "cash":$scope.friends[i].cash});
 
               }
 
-            };
-            if(tot<$scope.total){
+            }
+            console.log("tot"+ tot);
+            //console.dir(tot);
+            if(tot<=$scope.total){
+              console.log("ok")
             rpmt.expenses.group_name=groupCurrent.name;
             rpmt.expenses.bill_desc=bill.desc;
             rpmt.expenses.bill_price=bill.price;
-
+            rpmt.expenses.bill_paid=false;
+            
+            if (tot==$scope.total) {
+              rpmt.expenses.bill_paid=true;
+            }
+            console.dir(rpmt);
             Authentication.newRepayment(rpmt)
             .success(function(data){
             toastr.info('Send bill to your friends', 'Splitwise');
@@ -97,7 +122,9 @@ angular.module('publicApp')
               toastr.success('Good !', 'Splitwise');
            }
             else{
-              toastr.error('You pay too much');
+              console.dir(tot);
+              console.dir($scope.price);
+              toastr.error(tot,'You pay too much');
             }
           }
         }

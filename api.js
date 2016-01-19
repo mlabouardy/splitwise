@@ -76,7 +76,6 @@ module.exports=function(app){
 		console.log("groupid: "+ req.body.groupid);
 
 		var groupid = req.body.groupid;
-		var query;
 		var now = new Date(Date.now());
 		var dd = now.getDate();
 		var mm = now.getMonth()+1; //January is 0!
@@ -104,8 +103,8 @@ module.exports=function(app){
 			user.save();
 
 		});
-		User.findOneAndUpdate({ email : req.body.session }, {groups: query});
-		console.log(query);
+		//User.findOneAndUpdate({ email : req.body.session }, {groups: query});
+		//console.log(query);
 		res.send('{"success":true}');
 
 	});
@@ -202,20 +201,26 @@ module.exports=function(app){
 		console.log("bill_desc: "+ req.body.expenses.bill_desc);
 		console.log("bill_price: "+ req.body.expenses.bill_price);
 		console.log("group_name: "+ req.body.expenses.group_name);
+		console.log("bill_paid: "+ req.body.expenses.bill_paid);
+		console.log("bill_date: ");
 		console.log(req.body.details);
 
 		//get req parameter
 		var group_name = req.body.expenses.group_name;
 		var bill_desc = req.body.expenses.bill_desc;
 		var bill_price = req.body.expenses.bill_price;
+		var bill_paid = req.body.expenses.bill_paid;
+		var bill_details = req.body.details;
+		var bill_autor_email = req.body.session;
 		var end = false;
+		var update = null;
 
+		var bill=null;
 
-
+		//set the date
 		var now = new Date(Date.now());
 		var dd = now.getDate();
 		var mm = now.getMonth()+1; //January is 0!
-
 		var yyyy = now.getFullYear();
 		if(dd<10){
 			dd='0'+dd
@@ -225,76 +230,81 @@ module.exports=function(app){
 		}
 		var today = dd+'/'+mm+'/'+yyyy;
 
+
 		User.findOne({email : req.body.session},function (err,user){
 			if(err) throw err;
-			var id= user.repayments.length;
-			//user.repayments.push({"id": id,"desc":req.body.desc,"expenses":req.body.expenses,"date":today});
-			var bill = new Bill();
-			bill.group_name = group_name;
-			bill.bill_desc = bill_desc;
-			bill.bill_price = bill_price;
-			bill.details = req.body.details;
-			bill.autor_email = req.body.session;
-			console.log("new bill");
-			console.log(bill);
-			//bill.save();
 
-			for(var i in bill.details){
-				var friend = bill.details[i].friend;
+			//check if the bill also exist and update it 
+			//else create it 
+			Bill.findOne({bill_desc: bill_desc},function (err,billUpdate){
+				if(err) throw err;
+				update=false;
+				if (billUpdate!=null) {
+					billUpdate.details = req.body.details;
+					billUpdate.save();
+					update=true;
+				}
+				else{
+					//Create the Shared bill
+					bill = new Bill();
+					bill.group_name = group_name;
+					bill.bill_desc = bill_desc;
+					bill.bill_price = bill_price;
+					bill.details = bill_details;
+					bill.autor_email = bill_autor_email;
+					console.log("_____new bill");
+					console.log(bill);
+					console.log("____ _____");
+					bill.save();					
+
+				}
+
+			});
+
+			
+			//update friend's bill
+			for(var i in bill_details){
+				var friend = bill_details[i].friend;
 				//friend
 				if (undefined !=friend || friend !=null) {
-				if(friend.email!=bill.autor_email){
-					//add bill of each friend
-					User.findOne({email : friend.email},function (err,userFriend){
-					if(err) throw err;
-					//var id= user.expenses.length;
-					//user.expenses.push({"id": id,"desc":req.body.desc,"price":req.body.price,"groupname":user.groups[groupid].name,"date":today});
-					if(userFriend!=null){
-						for (var i = 0; i < userFriend.groups.length; i++) {
-							if(userFriend.groups[i].name==group_name){
-								var element = {"desc":bill_desc,"price":bill_price,paid:false};
-								userFriend.groups[i].bills.pushIfNotExist(element, function(e) { 
-	    							return e.desc === element.desc; 
-								});
-								userFriend.save();
-								console.log("ok for my friends");
-								end=true;
-								console.log("----------------!End addRepayment !");
-								//res.send('{"success":true}');
-								//push({"desc":bill_desc,"price":bill_price,paid:false});
-							}
-						}
-					};
-					});
-				}
-				}
-			}
-		//User.findOneAndUpdate({ email : req.body.session }, {groups: query});
-		//console.log(query);
-		//res.send('{"success":true}');
+					//if(friend.email!=bill_autor_email){
+						//add bill of each friend
+						User.findOne({email : friend.email},function (err,userFriend){
+							if(err) throw err;
+							//var id= user.expenses.length;
+							//user.expenses.push({"id": id,"desc":req.body.desc,"price":req.body.price,"groupname":user.groups[groupid].name,"date":today});
+							if(userFriend!=null){
+								for (var i = 0; i < userFriend.groups.length; i++) {
+									if(userFriend.groups[i].name==group_name){
+										var element = {"desc":bill_desc,"price":bill_price,paid:bill_paid};
+										userFriend.groups[i].bills.pushIfNotExist(element, function(e) { 
+	    									return e.desc === element.desc; 
+										});
+										for (var j = 0; j < userFriend.groups[i].bills.length; j++) {
+											if(userFriend.groups[i].bills[j].desc== bill_desc){
+												userFriend.groups[i].bills[j].paid=bill_paid;
+											}
+										};
+										userFriend.save();
+										console.log("ok for my friends");
+										end=true;
+										//res.send('{"success":true}');
+										//push({"desc":bill_desc,"price":bill_price,paid:false});
+									}
+								}
 
-				
-			
-			user.repayments.push(bill);
-			user.save();
-			bill.save(function(err){
-			if(err){
-				console.log(err)
-				var errorMessages = []
-				for (field in err.errors) {
-					console.log(err.errors[field].message)
-		            errorMessages.push(err.errors[field].message) 
-		        }
-		        console.log("error from mboutoucou")
-		        res.status(500).send(err.errmsg)
-			}
-			else{
-				if(end){
-					res.send('{"success":true}')
+							};
+																
+						});
+					//}
 				}
-			}
-		})
+			}	
+			
+			user.save();
+			
 		});
+		console.log("----------------!End addRepayment !");	
+		res.send('{"success":true}');
 		
 	});
 
