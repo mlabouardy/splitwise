@@ -30,5 +30,10 @@
     "mongoose": "^4.3.3",
     "mongoose-unique-validator": "^0.6.2",
     "validator": "^4.4.0"
+  },
+
+  "scripts": {
+    "postinstall": "node postinstall.js"
   }
+
 }
