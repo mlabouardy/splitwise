@@ -8,32 +8,40 @@
  * Controller of the publicApp
  */
 angular.module('publicApp')
-  .controller('FriendsCtrl', function ($scope, REST) {
-  		if(REST.isConnected()){
+  .controller('FriendsCtrl', function($scope, REST) {
 
-        var friends=function(){
-          REST.friends()
-            .success(function(friends){
-              $scope.friends=friends;
-            })
-            .error(function(){
 
-            });
-        }
+      REST.isConnected().success(function(data) {
 
-        friends();
-  			
+            var friends = function() {
+              REST.friends()
+                .success(function(friends) {
+                  $scope.friends = friends;
+                })
+                .error(function() {
 
-        $scope.delete=function(id){
-          REST.deleteFriend(id)
-            .success(function(){
-              friends();
-            })
-            .error(function(){
-              toastr.error('Something went wrong', 'Splitewise');
-            });
-        }
-	    }else{
-	      $location.path('/');
-	    }
-  });
+                });
+            }
+
+            friends();
+
+
+            $scope.delete = function(id) {
+              REST.deleteFriend(id)
+                .success(function() {
+                  friends();
+                })
+                .error(function() {
+                  toastr.error('Something went wrong', 'Splitewise');
+                });
+            }
+
+          }).error(function(data) {
+
+            $location.path('/');
+            
+          });
+
+
+
+      });

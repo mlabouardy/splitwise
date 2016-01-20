@@ -22,14 +22,14 @@
         </button>
         <a class="navbar-brand" href="#/">SPLITWISE</a>
       </div>
-      <div id="navbar" class="navbar-collapse collapse" ng-controller="MenuCtrl">
-        <div ng-if="!isConnected()">
+      <div id="navbar" class="navbar-collapse collapse">
+        <div ng-if="!isConnected">
           <ul class="nav navbar-nav navbar-right">
             <li data-ng-class="{active: isActive('/login')}"><a href="#/login"><i class="fa fa-sign-in"></i> Login</a></li>
             <li data-ng-class="{active: isActive('/sign-up')}"><a href="#/sign-up"><i class="fa fa-user-plus"></i> Sign up</a></li>
           </ul>
         </div>
-        <div ng-if="isConnected()">
+        <div ng-if="isConnected">
           <ul class="nav navbar-nav">
             <li data-ng-class="{active: isActive('/dashboard')}"><a href="#/dashboard"><i class="fa fa-home"></i> Dashboard</a></li>
             <li data-ng-class="{active: isActive('/groups')}"><a href="#/groups">Groups</a></li>
@@ -58,7 +58,6 @@
   <script src="scripts/constants.js"></script>
   <script src="bower_components/bootstrap-filestyle/bootstrap-filestyle.min.js"></script>
   <script src="scripts/app.js"></script>
-  <script src="scripts/controllers/menu.js"></script>
   <script src="scripts/controllers/login.js"></script>
   <script src="scripts/controllers/sign-up.js"></script>
   <script src="scripts/controllers/profile.js"></script>

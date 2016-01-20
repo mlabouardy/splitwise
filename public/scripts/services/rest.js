@@ -10,80 +10,66 @@
 angular.module('publicApp')
   .service('REST', function($http) {
 
-    var connected = false;
-    var session = "";
-
     return {
       isConnected: function() {
-        return connected;
+        return $http.get(API_URL + '/isConnected');
       },
       logout: function() {
-        connected = false;
-        return $http.get(API_URL + '/logout');
+        return $http.get(API_URL + '/api/logout');
       },
       login: function(data) {
-        session = data.session;
         return $http.post(API_URL + '/login', data);
       },
       register: function(data) {
         return $http.post(API_URL + '/register', data);
       },
       newBill: function(data) {
-        data.session = session;
-        return $http.post(API_URL + '/addBill', data);
+        return $http.post(API_URL + '/api/addBill', data);
       },
       getBillList: function(groupId) {
-        return $http.get(API_URL + '/getBillList/' + session + '/' + groupId);
+        return $http.get(API_URL + '/api/getBillList/' + groupId);
       },
       deleteBill: function(groupId,billId) {
-        return $http.delete(API_URL + '/deleteBill/' + session + '/' + groupId + '/' + billId);
+        return $http.delete(API_URL + '/api/deleteBill/' + groupId + '/' + billId);
       },
       getUsersDetails: function(groupId,billId) {
-        return $http.get(API_URL + '/getUsersDetails/' + session + '/' + groupId + '/' + billId);
+        return $http.get(API_URL + '/api/getUsersDetails/' + groupId + '/' + billId);
       },
       updateCurrentBill: function(data) {
-        data.session = session;
-        return $http.post(API_URL + '/updateCurrentBill', data);
+        return $http.post(API_URL + '/api/updateCurrentBill', data);
       },
       getProfile:function(){
-        return $http.get(API_URL+'/profile/'+session);
+        return $http.get(API_URL+'/api/profile');
       },
       updateProfile:function(data){
-        return $http.put(API_URL+'/profile',data);
+        return $http.put(API_URL+'/api/profile',data);
       },
       newGroup: function(data) {
-        data.session = session;
-        return $http.post(API_URL + '/addGroup', data);
+        return $http.post(API_URL + '/api/addGroup', data);
       },
       newFriend: function(data) {
-        data.session = session;
-        return $http.post(API_URL + '/addFriend', data);
+        return $http.post(API_URL + '/api/addFriend', data);
       },
       getGroups: function() {
-        return $http.get(API_URL + '/groups/' + session);
+        return $http.get(API_URL + '/api/groups');
       },
       friends: function() {
-        return $http.get(API_URL + '/friends/' + session);
+        return $http.get(API_URL + '/api/friends');
       },
       deleteFriend: function(id) {
-        return $http.delete(API_URL + '/friends/delete/' + session + '/' + id);
+        return $http.delete(API_URL + '/api/friends/delete/' + id);
       },
       group: function(id) {
-        return $http.get(API_URL + '/group/' + session + '/' + id);
+        return $http.get(API_URL + '/api/group/' + id);
       },
       deleteGroup: function(id) {
-        return $http.delete(API_URL + '/groups/delete/' + session + '/' + id);
+        return $http.delete(API_URL + '/api/groups/delete/' + id);
       },
       renameGroup: function(data) {
-        data.session = session;
-        return $http.post(API_URL + '/group/update', data);
+        return $http.post(API_URL + '/api/group/update', data);
       },
       deleteUserFromGroup: function(data) {
-        data.session = session;
-        return $http.post(API_URL + '/groups/users/delete', data);
-      },
-      ok: function() {
-        connected = true;
+        return $http.post(API_URL + '/api/groups/users/delete', data);
       }
     }
   });

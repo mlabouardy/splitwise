@@ -8,37 +8,41 @@
  * Controller of the publicApp
  */
 angular.module('publicApp')
-  .controller('ProfileCtrl', function ($scope,REST, $location) {
-  	if(REST.isConnected()){
-  
-      var getInfo=function(){
-        REST.getProfile()
-        .success(function(profile){
-          $scope.profile=profile;
-        });
-      }
+    .controller('ProfileCtrl', function($scope, REST, $location) {
 
-      getInfo();
+        REST.isConnected()
+            .success(function(data) {
 
-      $scope.notify=function(){
-        toastr.warning('Not implemented due to time', 'Splitwise');
-      };
+                var getInfo = function() {
+                    REST.getProfile()
+                        .success(function(profile) {
+                            $scope.profile = profile;
+                        });
+                }
 
-      $scope.upload=function(){
-        toastr.warning('Not implemented due to time', 'Splitwise');
-      };
+                getInfo();
 
-      $scope.update=function(){
-        REST.updateProfile($scope.profile)
-          .success(function(){
-            getInfo();
-            toastr.success('Profile updated !', 'Splitwise');
-          })
-          .error(function(){
-            toastr.error('Cannot update profile', 'Splitwise');
-          });
-      }
-  	}else{
-  	   $location.path('/');
-  	}
-  });
+                $scope.notify = function() {
+                    toastr.warning('Not implemented due to time', 'Splitwise');
+                };
+
+                $scope.upload = function() {
+                    toastr.warning('Not implemented due to time', 'Splitwise');
+                };
+
+                $scope.update = function() {
+                    REST.updateProfile($scope.profile)
+                        .success(function() {
+                            getInfo();
+                            toastr.success('Profile updated !', 'Splitwise');
+                        })
+                        .error(function() {
+                            toastr.error('Cannot update profile', 'Splitwise');
+                        });
+                }
+                
+            }).error(function(data) {
+                $location.path('/');
+            });
+
+    });

@@ -7,26 +7,27 @@
  * # LoginCtrl
  * Controller of the publicApp
  */
- angular.module('publicApp')
- .controller('LoginCtrl', function (REST, $location, $scope) {
- 	if(REST.isConnected()){
- 		$location.path('/');
- 	}else{
+angular.module('publicApp')
+	.controller('LoginCtrl', function(REST, $location, $scope) {
 
- 		$scope.login=function(){
- 			var info=$scope.user;
- 			info.session=$scope.user.email;
- 			REST.login(info)
- 			.success(function(data){
- 				REST.ok();
- 				$location.path('/profile');
- 				$location.path('/dashboard');
- 			})
- 			.error(function(data){
- 				toastr.error(data, 'Authentication failed');
- 				$scope.user={};
- 			});
- 		}
- 	}
- 	
- });
+		REST.isConnected()
+			.success(function(data) {
+				$location.path('/');
+			})
+			.error(function(data) {
+
+				$scope.login = function() {
+					REST.login($scope.user)
+						.success(function(data) {
+							$location.path('/dashboard');
+						})
+						.error(function(data) {
+							toastr.error(data, 'Authentication failed');
+							$scope.user = {};
+						});
+				}
+				
+			});
+
+
+	});

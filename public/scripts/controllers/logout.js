@@ -8,9 +8,9 @@
  * Controller of the publicApp
  */
 angular.module('publicApp')
-  .controller('LogoutCtrl', function (REST, $location) {
+  .controller('LogoutCtrl', function ($scope, REST, $location) {
     REST.logout()
-    	.success(function(){
+    	.success(function(data){
     			$location.path('/');
     		});	
   });

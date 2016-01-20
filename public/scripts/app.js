@@ -10,11 +10,11 @@
  */
 angular
   .module('publicApp', [
-    'ngRoute',    
+    'ngRoute',
     'ui.bootstrap',
     'googleplus'
   ])
-  .config(function ($routeProvider, GooglePlusProvider) {
+  .config(function($routeProvider, GooglePlusProvider) {
     $routeProvider
       .when('/', {
         templateUrl: 'views/main.html'
@@ -55,12 +55,16 @@ angular
         redirectTo: '/'
       });
 
-      /*
-          Google Plus Authentication is not working on local server 
+  }).run(function($rootScope, REST, $location) {
+    $rootScope.$on('$routeChangeStart', function(next, current) {
+      REST.isConnected().success(function() {
+        $rootScope.isConnected = true;
+      }).error(function() {
+        $rootScope.isConnected = false;
+      });
 
-          GooglePlusProvider.init({
-               clientId: '681024083865-sdgb14jp2bcb34et0s6qfaveu9fsbq0n.apps.googleusercontent.com',
-               apiKey: 'ZWQeuK1dPqgjhJ9GaZs9KI93'
-          });
-    */
+      $rootScope.isActive = function(path) {
+            return $location.path() == path;
+        }
+    });
   });
