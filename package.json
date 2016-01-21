@@ -33,7 +33,8 @@
   },
 
   "scripts": {
-    "postinstall": "node postinstall.js"
+    "postinstall": "node postinstall.js",
+    "start" : "node server.js"
   }
 
 }
