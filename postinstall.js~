@@ -17,7 +17,6 @@ mongoose.connect(constants.DATABASE_HOST, function() {
 	user.firstName = "user_1 firstName"
 	user.lastName = "user_1 lastName"
 	user.save(function(err){
-
 		console.log(user.email+' created');
 		var friend = new User()
 		friend.email = "user_2@gmail.com"
@@ -25,8 +24,9 @@ mongoose.connect(constants.DATABASE_HOST, function() {
 		friend.firstName = "user_2 firstName"
 		friend.lastName = "user_2 lastName"
 		friend.friends.push(user._id);
-		friend.save(function(err){
-			user.friends.push(friend._id);
+		friend.save();
+
+		user.friends.push(friend._id);
 		user.save(function(err){
 			console.log(friend.email+' created');
 			new Group({
@@ -94,8 +94,6 @@ mongoose.connect(constants.DATABASE_HOST, function() {
 					process.exit();
 				});
 			});
-		});
-
 		});
 
 	});
