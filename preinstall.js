@@ -1,5 +1,3 @@
-//npm run postinstall
-
 var User = require('./models/user.js');
 var Group = require('./models/group.js');
 var Bill = require('./models/bill.js');
